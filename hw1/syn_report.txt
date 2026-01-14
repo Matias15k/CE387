@@ -1,13 +1,13 @@
-<html><body><samp><pre>
-<!@TC:1768379082>
+
+
 #Build: Synplify (R) Premier O-2018.09-SP1, Build 3588R, Nov 27 2018
 #install: /vol/synopsys/fpga/O-2018.09-SP1
 #OS: Linux 
 #Hostname: joker.ece.northwestern.edu
 
-# Wed Jan 14 02:24:42 2026
+# Wed Jan 14 02:22:44 2026
 
-#Implementation: rev_2
+#Implementation: rev_1
 
 
 Copyright (C) 1994-2018 Synopsys, Inc.
@@ -25,10 +25,10 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=compilerReport1></a>Synopsys HDL Compiler, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49</a>
+Implementation : rev_1
+Synopsys HDL Compiler, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49
 
-@N: : <!@TM:1768379085> | Running in 64-bit mode 
+@N: :  | Running in 64-bit mode 
 ###########################################################[
 
 Copyright (C) 1994-2018 Synopsys, Inc.
@@ -46,45 +46,45 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=compilerReport2></a>Synopsys Verilog Compiler, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49</a>
+Implementation : rev_1
+Synopsys Verilog Compiler, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49
 
-@N: : <!@TM:1768379085> | Running in 64-bit mode 
-@N:<a href="@N:CG1349:@XP_HELP">CG1349</a> : <!@TM:1768379085> | Running Verilog Compiler in System Verilog mode 
+@N: :  | Running in 64-bit mode 
+@N:CG1349 :  | Running Verilog Compiler in System Verilog mode 
 
-@N:<a href="@N:CG1350:@XP_HELP">CG1350</a> : <!@TM:1768379085> | Running Verilog Compiler in Multiple File Compilation Unit mode 
+@N:CG1350 :  | Running Verilog Compiler in Multiple File Compilation Unit mode 
 
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/altera.v" (library work)
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/cycloneive.v" (library work)
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v" (library work)
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53001:16:53001:29:@N:CG334:@XP_MSG">altera_mf.v(53001)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53051:16:53051:28:@N:CG333:@XP_MSG">altera_mf.v(53051)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53060:16:53060:29:@N:CG334:@XP_MSG">altera_mf.v(53060)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53074:16:53074:28:@N:CG333:@XP_MSG">altera_mf.v(53074)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53221:20:53221:33:@N:CG334:@XP_MSG">altera_mf.v(53221)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53226:20:53226:32:@N:CG333:@XP_MSG">altera_mf.v(53226)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53229:20:53229:33:@N:CG334:@XP_MSG">altera_mf.v(53229)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53232:20:53232:32:@N:CG333:@XP_MSG">altera_mf.v(53232)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53346:20:53346:33:@N:CG334:@XP_MSG">altera_mf.v(53346)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53351:20:53351:32:@N:CG333:@XP_MSG">altera_mf.v(53351)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53354:20:53354:33:@N:CG334:@XP_MSG">altera_mf.v(53354)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53357:20:53357:32:@N:CG333:@XP_MSG">altera_mf.v(53357)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53446:20:53446:33:@N:CG334:@XP_MSG">altera_mf.v(53446)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53451:20:53451:32:@N:CG333:@XP_MSG">altera_mf.v(53451)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53454:20:53454:33:@N:CG334:@XP_MSG">altera_mf.v(53454)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53457:20:53457:32:@N:CG333:@XP_MSG">altera_mf.v(53457)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53545:20:53545:33:@N:CG334:@XP_MSG">altera_mf.v(53545)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53550:20:53550:32:@N:CG333:@XP_MSG">altera_mf.v(53550)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53553:20:53553:33:@N:CG334:@XP_MSG">altera_mf.v(53553)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53556:20:53556:32:@N:CG333:@XP_MSG">altera_mf.v(53556)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53642:20:53642:33:@N:CG334:@XP_MSG">altera_mf.v(53642)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53647:20:53647:32:@N:CG333:@XP_MSG">altera_mf.v(53647)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53650:20:53650:33:@N:CG334:@XP_MSG">altera_mf.v(53650)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53653:20:53653:32:@N:CG333:@XP_MSG">altera_mf.v(53653)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53861:12:53861:25:@N:CG334:@XP_MSG">altera_mf.v(53861)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:53875:12:53875:24:@N:CG333:@XP_MSG">altera_mf.v(53875)</a><!@TM:1768379085> | Read directive translate_on.
-@N:<a href="@N:CG334:@XP_HELP">CG334</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:54140:12:54140:25:@N:CG334:@XP_MSG">altera_mf.v(54140)</a><!@TM:1768379085> | Read directive translate_off.
-@N:<a href="@N:CG333:@XP_HELP">CG333</a> : <a href="/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_mf.v:54154:12:54154:24:@N:CG333:@XP_MSG">altera_mf.v(54154)</a><!@TM:1768379085> | Read directive translate_on.
+@N:CG334 : altera_mf.v(53001) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53051) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53060) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53074) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53221) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53226) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53229) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53232) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53346) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53351) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53354) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53357) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53446) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53451) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53454) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53457) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53545) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53550) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53553) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53556) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53642) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53647) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53650) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53653) | Read directive translate_on.
+@N:CG334 : altera_mf.v(53861) | Read directive translate_off.
+@N:CG333 : altera_mf.v(53875) | Read directive translate_on.
+@N:CG334 : altera_mf.v(54140) | Read directive translate_off.
+@N:CG333 : altera_mf.v(54154) | Read directive translate_on.
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_lpm.v" (library work)
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/altera/quartus_prime181/altera_primitives.v" (library work)
 @I::"/vol/synopsys/fpga/O-2018.09-SP1/lib/vlog/hypermods.v" (library __hyper__lib__)
@@ -95,7 +95,7 @@ Implementation : rev_2
 @I::"/home/tnc5178/CE387/hw1/fibonacci.sv" (library work)
 Verilog syntax check successful!
 Selecting top level module fibonacci
-@N:<a href="@N:CG364:@XP_HELP">CG364</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:1:7:1:16:@N:CG364:@XP_MSG">fibonacci.sv(1)</a><!@TM:1768379085> | Synthesizing module fibonacci in library work.
+@N:CG364 : fibonacci.sv(1) | Synthesizing module fibonacci in library work.
 Running optimization stage 1 on fibonacci .......
 
 At c_ver Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 77MB peak: 78MB)
@@ -103,7 +103,7 @@ At c_ver Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
 
 Process completed successfully.
-# Wed Jan 14 02:24:42 2026
+# Wed Jan 14 02:22:44 2026
 
 ###########################################################]
 ###########################################################[
@@ -123,27 +123,27 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=compilerReport3></a>Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49</a>
+Implementation : rev_1
+Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49
 
-@N: : <!@TM:1768379085> | Running in 64-bit mode 
-@N:<a href="@N:NF107:@XP_HELP">NF107</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:1:7:1:16:@N:NF107:@XP_MSG">fibonacci.sv(1)</a><!@TM:1768379085> | Selected library: work cell: fibonacci view verilog as top level
-@N:<a href="@N:NF107:@XP_HELP">NF107</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:1:7:1:16:@N:NF107:@XP_MSG">fibonacci.sv(1)</a><!@TM:1768379085> | Selected library: work cell: fibonacci view verilog as top level
+@N: :  | Running in 64-bit mode 
+@N:NF107 : fibonacci.sv(1) | Selected library: work cell: fibonacci view verilog as top level
+@N:NF107 : fibonacci.sv(1) | Selected library: work cell: fibonacci view verilog as top level
 
 At syn_nfilter Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 67MB peak: 68MB)
 
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
 
 Process completed successfully.
-# Wed Jan 14 02:24:43 2026
+# Wed Jan 14 02:22:45 2026
 
 ###########################################################]
 
 Finished Containment srs generation. (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 3MB peak: 4MB)
 
-<font color=#A52A2A>@W: : <!@TM:1768379085> | : Distributed compilation : All files are passed to distribution points</font> 
+@W: :  | : Distributed compilation : All files are passed to distribution points 
 Divided design in to 1 groups
-Log file for distribution node work.fibonacci.verilog  <a href="/home/tnc5178/CE387/hw1/rev_2/synwork//distcomp/distcomp0/distcomp0.log:@XP_FILE">distcomp0.log</a>
+Log file for distribution node work.fibonacci.verilog  distcomp0.log
 Compiling work_fibonacci_verilog as a separate process
 Compilation of node work.fibonacci finished successfully.Real start time 0h:00m:00s, Real end time = 0h:00m:01s, Total real run time = 0h:00m:01s
 
@@ -152,7 +152,7 @@ Distributed Compiler Report
 
 DP Name                    Status      Start time     End Time       Total Real Time     Log File                                                               
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-work.fibonacci.verilog     Success     0h:00m:00s     0h:00m:01s     0h:00m:01s          /home/tnc5178/CE387/hw1/rev_2/synwork//distcomp/distcomp0/distcomp0.log
+work.fibonacci.verilog     Success     0h:00m:00s     0h:00m:01s     0h:00m:01s          /home/tnc5178/CE387/hw1/rev_1/synwork//distcomp/distcomp0/distcomp0.log
 ================================================================================================================================================================
 ###########################################################[
 
@@ -171,17 +171,17 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=compilerReport4></a>Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49</a>
+Implementation : rev_1
+Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49
 
-@N: : <!@TM:1768379085> | Running in 64-bit mode 
+@N: :  | Running in 64-bit mode 
 
 At syn_nfilter Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 67MB peak: 68MB)
 
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
 
 Process completed successfully.
-# Wed Jan 14 02:24:45 2026
+# Wed Jan 14 02:22:47 2026
 
 ###########################################################]
 @END
@@ -191,13 +191,13 @@ At c_hdl Exit (Real Time elapsed 0h:00m:02s; CPU Time elapsed 0h:00m:00s; Memory
 Process took 0h:00m:02s realtime, 0h:00m:01s cputime
 
 Process completed successfully.
-# Wed Jan 14 02:24:45 2026
+# Wed Jan 14 02:22:47 2026
 
 ###########################################################]
 
-</pre></samp></body></html>
-<html><body><samp><pre>
-<!@TC:1768379082>
+
+
+
 ###########################################################[
 
 Copyright (C) 1994-2018 Synopsys, Inc.
@@ -215,32 +215,32 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=compilerReport5></a>Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49</a>
+Implementation : rev_1
+Synopsys Synopsys Netlist Linker, Version comp2018q4p1, Build 004R, Built Nov 27 2018 21:19:49
 
-@N: : <!@TM:1768379086> | Running in 64-bit mode 
-@N:<a href="@N:NF107:@XP_HELP">NF107</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:1:7:1:16:@N:NF107:@XP_MSG">fibonacci.sv(1)</a><!@TM:1768379086> | Selected library: work cell: fibonacci view verilog as top level
-@N:<a href="@N:NF107:@XP_HELP">NF107</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:1:7:1:16:@N:NF107:@XP_MSG">fibonacci.sv(1)</a><!@TM:1768379086> | Selected library: work cell: fibonacci view verilog as top level
+@N: :  | Running in 64-bit mode 
+@N:NF107 : fibonacci.sv(1) | Selected library: work cell: fibonacci view verilog as top level
+@N:NF107 : fibonacci.sv(1) | Selected library: work cell: fibonacci view verilog as top level
 
 At syn_nfilter Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 67MB peak: 68MB)
 
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
 
 Process completed successfully.
-# Wed Jan 14 02:24:46 2026
+# Wed Jan 14 02:22:48 2026
 
 ###########################################################]
 
-</pre></samp></body></html>
-<html><body><samp><pre>
-<!@TC:1768379082>
+
+
+
 Premap Report
 
 
-</pre></samp></body></html>
-<html><body><samp><pre>
-<!@TC:1768379082>
-# Wed Jan 14 02:24:46 2026
+
+
+
+# Wed Jan 14 02:22:48 2026
 
 
 Copyright (C) 1994-2018 Synopsys, Inc.
@@ -258,38 +258,38 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=mapperReport6></a>Synopsys Intel FPGA Technology Pre-mapping, Version maprc, Build 4745R, Built Nov 27 2018 21:14:52</a>
+Implementation : rev_1
+Synopsys Intel FPGA Technology Pre-mapping, Version maprc, Build 4745R, Built Nov 27 2018 21:14:52
 
 
 Mapper Startup Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 98MB peak: 99MB)
 
-@A:<a href="@A:MF827:@XP_HELP">MF827</a> : <!@TM:1768379087> | No constraint file specified. 
-@N:<a href="@N:MF284:@XP_HELP">MF284</a> : <!@TM:1768379087> | Setting synthesis effort to medium for the design 
-Linked File:  <a href="/home/tnc5178/CE387/hw1/rev_2/fibonacci_scck.rpt:@XP_FILE">fibonacci_scck.rpt</a>
-Printing clock  summary report in "/home/tnc5178/CE387/hw1/rev_2/fibonacci_scck.rpt" file 
-@N:<a href="@N:MF915:@XP_HELP">MF915</a> : <!@TM:1768379087> | Option synthesis_strategy=advanced is enabled.  
-@N:<a href="@N:MF248:@XP_HELP">MF248</a> : <!@TM:1768379087> | Running in 64-bit mode. 
-@N:<a href="@N:MF666:@XP_HELP">MF666</a> : <!@TM:1768379087> | Clock conversion enabled. (Command "set_option -fix_gated_and_generated_clocks 1" in the project file.) 
+@A:MF827 :  | No constraint file specified. 
+@N:MF284 :  | Setting synthesis effort to medium for the design 
+Linked File:  fibonacci_scck.rpt
+Printing clock  summary report in "/home/tnc5178/CE387/hw1/rev_1/fibonacci_scck.rpt" file 
+@N:MF915 :  | Option synthesis_strategy=advanced is enabled.  
+@N:MF248 :  | Running in 64-bit mode. 
+@N:MF666 :  | Clock conversion enabled. (Command "set_option -fix_gated_and_generated_clocks 1" in the project file.) 
 
 Design Input Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 99MB peak: 101MB)
 
 
 Mapper Initialization Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 99MB peak: 101MB)
 
-<font color=#A52A2A>@W:<a href="@W:FA406:@XP_HELP">FA406</a> : <!@TM:1768379087> | Environment variable QUARTUS_ROOTDIR not set. Cannot determine PAR version.</font> 
-@N:<a href="@N:MF284:@XP_HELP">MF284</a> : <!@TM:1768379087> | Setting synthesis effort to medium for the design 
+@W:FA406 :  | Environment variable QUARTUS_ROOTDIR not set. Cannot determine PAR version. 
+@N:MF284 :  | Setting synthesis effort to medium for the design 
 
 Finished Clear Box Flow. (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 115MB peak: 117MB)
 
-@N:<a href="@N:MH105:@XP_HELP">MH105</a> : <!@TM:1768379087> | UMR3 is only supported for HAPS-80. 
-@N:<a href="@N:MH105:@XP_HELP">MH105</a> : <!@TM:1768379087> | UMR3 is only supported for HAPS-80. 
+@N:MH105 :  | UMR3 is only supported for HAPS-80. 
+@N:MH105 :  | UMR3 is only supported for HAPS-80. 
 
 Finished netlist restructuring (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 115MB peak: 117MB)
 
 
 
-<a name=mapperReport7></a>Clock Summary</a>
+Clock Summary
 ******************
 
           Start             Requested     Requested     Clock        Clock                     Clock
@@ -309,10 +309,10 @@ Clock             Load      Pin           Seq Example     Seq Example       Comb
 fibonacci|clk     68        clk(port)     done.C          -                 -            
 =========================================================================================
 
-<font color=#A52A2A>@W:<a href="@W:MT529:@XP_HELP">MT529</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:25:2:25:11:@W:MT529:@XP_MSG">fibonacci.sv(25)</a><!@TM:1768379087> | Found inferred clock fibonacci|clk which controls 68 sequential elements including count[15:0]. This clock has no specified timing constraint which may prevent conversion of gated or generated clocks and may adversely impact design performance. </font>
+@W:MT529 : fibonacci.sv(25) | Found inferred clock fibonacci|clk which controls 68 sequential elements including count[15:0]. This clock has no specified timing constraint which may prevent conversion of gated or generated clocks and may adversely impact design performance. 
 
 Finished Pre Mapping Phase.
-@N:<a href="@N:BN225:@XP_HELP">BN225</a> : <!@TM:1768379087> | Writing default property annotation file /home/tnc5178/CE387/hw1/rev_2/fibonacci.sap. 
+@N:BN225 :  | Writing default property annotation file /home/tnc5178/CE387/hw1/rev_1/fibonacci.sap. 
 
 Starting constraint checker (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 115MB peak: 118MB)
 
@@ -334,20 +334,20 @@ Pre-mapping successful!
 At Mapper Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 31MB peak: 118MB)
 
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
-# Wed Jan 14 02:24:47 2026
+# Wed Jan 14 02:22:48 2026
 
 ###########################################################]
 
-</pre></samp></body></html>
-<html><body><samp><pre>
-<!@TC:1768379082>
+
+
+
 Map & Optimize Report
 
 
-</pre></samp></body></html>
-<html><body><samp><pre>
-<!@TC:1768379082>
-# Wed Jan 14 02:24:47 2026
+
+
+
+# Wed Jan 14 02:22:48 2026
 
 
 Copyright (C) 1994-2018 Synopsys, Inc.
@@ -365,37 +365,37 @@ max user processes: 126617
 max stack size: 8388608 (bytes)
 
 
-Implementation : rev_2
-<a name=mapperReport8></a>Synopsys Intel FPGA Technology Mapper, Version maprc, Build 4745R, Built Nov 27 2018 21:14:52</a>
+Implementation : rev_1
+Synopsys Intel FPGA Technology Mapper, Version maprc, Build 4745R, Built Nov 27 2018 21:14:52
 
 
 Mapper Startup Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 98MB peak: 99MB)
 
-@N:<a href="@N:MF284:@XP_HELP">MF284</a> : <!@TM:1768379088> | Setting synthesis effort to medium for the design 
-@N:<a href="@N:MF915:@XP_HELP">MF915</a> : <!@TM:1768379088> | Option synthesis_strategy=advanced is enabled.  
-@N:<a href="@N:MF248:@XP_HELP">MF248</a> : <!@TM:1768379088> | Running in 64-bit mode. 
-@N:<a href="@N:MF666:@XP_HELP">MF666</a> : <!@TM:1768379088> | Clock conversion enabled. (Command "set_option -fix_gated_and_generated_clocks 1" in the project file.) 
+@N:MF284 :  | Setting synthesis effort to medium for the design 
+@N:MF915 :  | Option synthesis_strategy=advanced is enabled.  
+@N:MF248 :  | Running in 64-bit mode. 
+@N:MF666 :  | Clock conversion enabled. (Command "set_option -fix_gated_and_generated_clocks 1" in the project file.) 
 
 Design Input Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 98MB peak: 100MB)
 
 
 Mapper Initialization Complete (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 98MB peak: 100MB)
 
-<font color=#A52A2A>@W:<a href="@W:FA406:@XP_HELP">FA406</a> : <!@TM:1768379088> | Environment variable QUARTUS_ROOTDIR not set. Cannot determine PAR version.</font> 
-@N:<a href="@N:MF284:@XP_HELP">MF284</a> : <!@TM:1768379088> | Setting synthesis effort to medium for the design 
+@W:FA406 :  | Environment variable QUARTUS_ROOTDIR not set. Cannot determine PAR version. 
+@N:MF284 :  | Setting synthesis effort to medium for the design 
 
 
 Starting Optimization and Mapping (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 115MB peak: 116MB)
 
 
 Available hyper_sources - for debug and ip models
-	None Found
+    None Found
 
-@N:<a href="@N:MT206:@XP_HELP">MT206</a> : <!@TM:1768379088> | Auto Constrain mode is enabled 
+@N:MT206 :  | Auto Constrain mode is enabled 
 
 Finished RTL optimizations (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 115MB peak: 116MB)
 
-@N:<a href="@N:MO231:@XP_HELP">MO231</a> : <a href="/home/tnc5178/CE387/hw1/fibonacci.sv:25:2:25:11:@N:MO231:@XP_MSG">fibonacci.sv(25)</a><!@TM:1768379088> | Found counter in view:work.fibonacci(verilog) instance count[15:0] 
+@N:MO231 : fibonacci.sv(25) | Found counter in view:work.fibonacci(verilog) instance count[15:0] 
 Encoding state machine cur_state[2:0] (in view: work.fibonacci(verilog))
 original code -> new code
    00 -> 00
@@ -443,7 +443,7 @@ Finished preparing to map (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m
 
 Finished technology mapping (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 117MB peak: 119MB)
 
-@N:<a href="@N:FA100:@XP_HELP">FA100</a> : <!@TM:1768379088> | Instance "countlde" with "32" loads has been replicated "1" time(s) due to hard fanout limit of "30"  
+@N:FA100 :  | Instance "countlde" with "32" loads has been replicated "1" time(s) due to hard fanout limit of "30"  
 
 Finished technology timing optimizations and critical path resynthesis (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 117MB peak: 119MB)
 
@@ -455,7 +455,7 @@ Finished restoring hierarchy (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:
 @S |Clock Optimization Summary
 
 
-<a name=clockReport9></a>#### START OF CLOCK OPTIMIZATION REPORT #####[</a>
+#### START OF CLOCK OPTIMIZATION REPORT #####[
 
 1 non-gated/non-generated clock tree(s) driving 67 clock pin(s) of sequential element(s)
 0 gated/generated clock tree(s) driving 0 clock pin(s) of sequential element(s)
@@ -464,7 +464,7 @@ Finished restoring hierarchy (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:
 =========================== Non-Gated/Non-Generated Clocks ============================
 Clock Tree ID     Driving Element     Drive Element Type     Fanout     Sample Instance
 ---------------------------------------------------------------------------------------
-<a href="@|S:clk_in@|E:done@|F:@syn_sample_clock_path==CKID0001@|M:ClockId0001  @XP_NAMES_BY_PROP">ClockId0001 </a>       clk_in              cycloneive_io_ibuf     67         done           
+ClockId0001        clk_in              cycloneive_io_ibuf     67         done           
 =======================================================================================
 
 
@@ -474,7 +474,7 @@ Clock Tree ID     Driving Element     Drive Element Type     Fanout     Sample I
 
 Start Writing Netlists (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 106MB peak: 120MB)
 
-Writing Analyst data base /home/tnc5178/CE387/hw1/rev_2/synwork/fibonacci_m.srm
+Writing Analyst data base /home/tnc5178/CE387/hw1/rev_1/synwork/fibonacci_m.srm
 
 Finished Writing Netlist Databases (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 116MB peak: 120MB)
 
@@ -483,9 +483,9 @@ Writing .vqm output for Quartus
 
 Writing scf file... (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 118MB peak: 120MB)
 
-@N:<a href="@N:BW103:@XP_HELP">BW103</a> : <!@TM:1768379088> | The default time unit for the Synopsys Constraint File (SDC or FDC) is 1ns. 
-@N:<a href="@N:BW107:@XP_HELP">BW107</a> : <!@TM:1768379088> | Synopsys Constraint File capacitance units using default value of 1pF  
-Writing FDC file /home/tnc5178/CE387/hw1/rev_2/fibonacci_synplify.fdc
+@N:BW103 :  | The default time unit for the Synopsys Constraint File (SDC or FDC) is 1ns. 
+@N:BW107 :  | Synopsys Constraint File capacitance units using default value of 1pF  
+Writing FDC file /home/tnc5178/CE387/hw1/rev_1/fibonacci_synplify.fdc
 
 Finished Writing Verilog Netlist and constraint files (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 116MB peak: 120MB)
 
@@ -496,11 +496,11 @@ Finished Writing Verilog Simulation files (Real Time elapsed 0h:00m:00s; CPU Tim
 
 Start final timing analysis (Real Time elapsed 0h:00m:01s; CPU Time elapsed 0h:00m:00s; Memory used current: 117MB peak: 120MB)
 
-<font color=#A52A2A>@W:<a href="@W:MT420:@XP_HELP">MT420</a> : <!@TM:1768379088> | Found inferred clock fibonacci|clk with period 4.48ns. Please declare a user-defined clock on port clk.</font> 
+@W:MT420 :  | Found inferred clock fibonacci|clk with period 4.48ns. Please declare a user-defined clock on port clk. 
 
 
-<a name=timingReport10></a>##### START OF TIMING REPORT #####[</a>
-<a name=11></a># Timing Report written on Wed Jan 14 02:24:48 2026</a>
+##### START OF TIMING REPORT #####[
+# Timing Report written on Wed Jan 14 02:22:49 2026
 #
 
 
@@ -509,13 +509,13 @@ Requested Frequency:    223.3 MHz
 Wire load mode:         top
 Paths requested:        5
 Constraint File(s):    
-@N:<a href="@N:MT320:@XP_HELP">MT320</a> : <!@TM:1768379088> | This timing report is an estimate of place and route data. For final timing results, use the FPGA vendor place and route report. 
+@N:MT320 :  | This timing report is an estimate of place and route data. For final timing results, use the FPGA vendor place and route report. 
 
-@N:<a href="@N:MT322:@XP_HELP">MT322</a> : <!@TM:1768379088> | Clock constraints include only register-to-register paths associated with each individual clock. 
+@N:MT322 :  | Clock constraints include only register-to-register paths associated with each individual clock. 
 
 
 
-<a name=performanceSummary12></a>Performance Summary</a>
+Performance Summary
 *******************
 
 
@@ -531,7 +531,7 @@ fibonacci|clk      223.3 MHz     189.8 MHz     4.478         5.269         -0.79
 
 
 
-<a name=clockRelationships13></a>Clock Relationships</a>
+Clock Relationships
 *******************
 
 Clocks                        |    rise  to  rise    |    fall  to  fall   |    rise  to  fall   |    fall  to  rise 
@@ -545,7 +545,7 @@ fibonacci|clk  fibonacci|clk  |  4.478       -0.790  |  No paths    -      |  No
 
 
 
-<a name=interfaceInfo14></a>Interface Information </a>
+Interface Information 
 *********************
 
 No IO constraint found
@@ -553,12 +553,12 @@ No IO constraint found
 
 
 ====================================
-<a name=clockReport15></a>Detailed Report for Clock: fibonacci|clk</a>
+Detailed Report for Clock: fibonacci|clk
 ====================================
 
 
 
-<a name=startingSlack16></a>Starting Points with Worst Slack</a>
+Starting Points with Worst Slack
 ********************************
 
              Starting                                          Arrival           
@@ -578,7 +578,7 @@ count[9]     fibonacci|clk     dffeas     q       count[9]     0.845       -0.19
 =================================================================================
 
 
-<a name=endingSlack17></a>Ending Points with Worst Slack</a>
+Ending Points with Worst Slack
 ******************************
 
              Starting                                                   Required           
@@ -599,8 +599,8 @@ dout[9]      fibonacci|clk     dffeas     d       dout_1_0_9__m3        5.005   
 
 
 
-<a name=worstPaths18></a>Worst Path Information</a>
-<a href="/home/tnc5178/CE387/hw1/rev_2/fibonacci.srr:srsf/home/tnc5178/CE387/hw1/rev_2/fibonacci.srs:fp:30226:37186:@XP_NAMES_GATE">View Worst Path in Analyst</a>
+Worst Path Information
+View Worst Path in Analyst
 ***********************
 
 
@@ -1026,25 +1026,25 @@ Finished final timing analysis (Real Time elapsed 0h:00m:01s; CPU Time elapsed 0
 
 Finished timing report (Real Time elapsed 0h:00m:01s; CPU Time elapsed 0h:00m:00s; Memory used current: 117MB peak: 120MB)
 
-<a name=areaReport19></a>##### START OF AREA REPORT #####[</a>
+##### START OF AREA REPORT #####[
 Design view:work.fibonacci(verilog)
 Selecting part EP4CE6E22A7
-@N:<a href="@N:FA174:@XP_HELP">FA174</a> : <!@TM:1768379088> | The following device usage report estimates place and route data. Please look at the place and route report for final resource usage. 
+@N:FA174 :  | The following device usage report estimates place and route data. Please look at the place and route report for final resource usage. 
 
 Total combinational functions 87 of 6272 ( 1%)
 Logic element usage by number of inputs
-		  4 input functions 	 28
-		  3 input functions 	 8
-		  [=2 input functions 	 51
+          4 input functions      28
+          3 input functions      8
+          [=2 input functions    51
 Logic elements by mode
-		  normal mode            38
-		  arithmetic mode        49
+          normal mode            38
+          arithmetic mode        49
 Total registers 67 of 6272 ( 1%)
 I/O pins 36 of 180 (20%), total I/O based on largest package of this part.
 
 Number of I/O registers
-			Input DDRs    :0
-			Output DDRs   :0
+            Input DDRs    :0
+            Output DDRs   :0
 
 DSP Blocks:     0  (0 nine-bit DSP elements).
 DSP Utilization: 0.00% of available 15 blocks (30 nine-bit).
@@ -1061,8 +1061,7 @@ Mapper successful!
 At Mapper Exit (Real Time elapsed 0h:00m:01s; CPU Time elapsed 0h:00m:00s; Memory used current: 23MB peak: 120MB)
 
 Process took 0h:00m:01s realtime, 0h:00m:01s cputime
-# Wed Jan 14 02:24:48 2026
+# Wed Jan 14 02:22:50 2026
 
 ###########################################################]
 
-</pre></samp></body></html>
