@@ -1,0 +1,2 @@
+@W: FA406 |Environment variable QUARTUS_ROOTDIR not set. Cannot determine PAR version.
+@W: MT529 :"/home/tnc5178/CE387/hw1/fibonacci.sv":25:2:25:10|Found inferred clock fibonacci|clk which controls 68 sequential elements including count[15:0]. This clock has no specified timing constraint which may prevent conversion of gated or generated clocks and may adversely impact design performance. 

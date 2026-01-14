@@ -18,7 +18,16 @@ module fibonacci_tb;
 	clk = 1'b0;
 	#5;
 	clk = 1'b1;
-	#5
+	#5;
+  end
+
+  integer cycle_count = 0;
+
+  // Increment cycle count on every positive edge
+  always @(posedge clk) begin
+    if (!reset) begin
+        cycle_count <= cycle_count + 1;
+    end
   end
 
   initial
@@ -47,12 +56,44 @@ module fibonacci_tb;
 	    $display("INCORRECT RESULT: %d, SHOULD BE: 5", dout);
 
 
-	/* ----------------------
-	   TEST MORE INPUTS HERE
-	   ---------------------
-	*/
+
+
+	/* ------------- Input of 0 ------------- */
+	// Inputs into module/ Assert start
+    #20;
+    din = 16'd0;
+    start = 1'b1;
+    #10 start = 1'b0;
+    
+    #10 wait (done == 1'b1); 
+
+    $display("-----------------------------------------");
+    $display("Input: %d", din);
+    if (dout === 0)
+        $display("CORRECT RESULT: %d, GOOD JOB!", dout);
+    else
+        $display("INCORRECT RESULT: %d, SHOULD BE: 0", dout);
+
+
+	/* ------------- Input of 8 ------------- */
+	// Inputs into module/ Assert start
+    #20; 
+    din = 16'd8;
+    start = 1'b1;
+    #10 start = 1'b0;
+    
+    #10 wait (done == 1'b1); 
+
+    $display("-----------------------------------------");
+    $display("Input: %d", din);
+    if (dout === 21)
+        $display("CORRECT RESULT: %d, GOOD JOB!", dout);
+    else
+        $display("INCORRECT RESULT: %d, SHOULD BE: 21", dout);
 
     // Done
-	$stop;
+    $display("Total cycles for this test: %d", cycle_count);
+    $stop;
   end
 endmodule
+

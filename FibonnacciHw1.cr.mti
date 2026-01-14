@@ -1,0 +1,8 @@
+/home/tnc5178/CE387/hw1/fibonacci.sv {1 {vlog -work work -vopt -sv -stats=none /home/tnc5178/CE387/hw1/fibonacci.sv
+Model Technology ModelSim SE-64 vlog 2020.1 Compiler 2020.01 Jan 28 2020
+-- Compiling module fibonacci
+
+Top level modules:
+	fibonacci
+
+} {} {}}

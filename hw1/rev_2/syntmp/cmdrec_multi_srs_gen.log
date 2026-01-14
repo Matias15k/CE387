@@ -1,0 +1,8 @@
+/vol/synopsys/fpga/O-2018.09-SP1/bin/syn_nfilter  -link  -multisrs  /home/tnc5178/CE387/hw1/rev_2/synwork/fibonacci_comp.srs  -osyn  /home/tnc5178/CE387/hw1/rev_2/synwork/fibonacci_mult.srs  -log  /home/tnc5178/CE387/hw1/rev_2/synlog/fibonacci_multi_srs_gen.srr 
+relcom:/vol/synopsys/fpga/O-2018.09-SP1/bin/syn_nfilter -link -multisrs ../synwork/fibonacci_comp.srs -osyn ../synwork/fibonacci_mult.srs -log ../synlog/fibonacci_multi_srs_gen.srr
+rc:0 success:1 runtime:0
+file:../synwork/fibonacci_comp.srs|io:i|time:1768379085|size:3426|exec:0|csum:F36102BEF4EC47E30CCFCA0F5D9DA2C0
+file:../synwork/fibonacci_mult.srs|io:o|time:1768379086|size:3122|exec:0|csum:
+file:../synlog/fibonacci_multi_srs_gen.srr|io:o|time:1768379086|size:1396|exec:0|csum:
+file:/vol/synopsys/fpga/O-2018.09-SP1/linux_a_64/syn_nfilter|io:i|time:1543382463|size:12202632|exec:1|csum:2CF5CA82A12C53A85C3E36D57C2461DC
+file:/vol/synopsys/fpga/O-2018.09-SP1/bin/syn_nfilter|io:i|time:1543382354|size:368|exec:1|csum:004E4455B64BA10AD6A92FB2301610E0
