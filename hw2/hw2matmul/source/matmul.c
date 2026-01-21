@@ -24,7 +24,7 @@ void matmul( int N, int A[N][N], int B[N][N], int C[N][N]  )
 
 int main()
 {
-    const int n = 64;
+    const int n = 8;
     int X[n][n], Y[n][n], Z[n][n];
 
     // create random inputs

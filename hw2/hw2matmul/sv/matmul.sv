@@ -26,17 +26,15 @@ module matmul
 
     state_t state, state_c;
 
-    //counters and total
-    logic [3:0] i, i_c; // Row counter (0-7)
-    logic [3:0] j, j_c; // Col counter (0-7)
-    logic [3:0] k, k_c; // Dot product counter (0-7)
+    logic [3:0] i, i_c; //rows
+    logic [3:0] j, j_c; //cols
+    logic [3:0] k, k_c; //product
     
     logic [DATA_WIDTH-1:0] accum, accum_c;
     logic done_c, done_o;
 
     assign done = done_o;
 
-    // Sequential Block
     always_ff @(posedge clock or posedge reset) begin
         if (reset) begin
             state   <= s_idle;
@@ -55,9 +53,8 @@ module matmul
         end
     end
 
-    // Combinational Block
     always_comb begin
-        // Default assignments
+
         state_c   = state;
         done_c    = done_o;
         i_c       = i;
@@ -65,7 +62,6 @@ module matmul
         k_c       = k;
         accum_c   = accum;
 
-        // Default Outputs
         a_addr    = '0;
         b_addr    = '0;
         c_addr    = '0;
@@ -84,58 +80,40 @@ module matmul
                 end
             end
 
-            // Setup: Initialize accum and pre-fetch the first data (k=0)
             s_setup: begin
                 accum_c = '0;
                 k_c     = '0;
                 
-                // Pre-fetch k=0 for the pipeline
-                // A address: Row i, Col 0 -> (i*8) + 0
-                // B address: Row 0, Col j -> (0*8) + j
                 a_addr = {i[2:0], 3'b000}; 
                 b_addr = {3'b000, j[2:0]};
                 
                 state_c = s_calc;
             end
 
-            // Calc: Pipeline loop. 
-            // 1. Read data requested in previous cycle.
-            // 2. Accumulate.
-            // 3. Request next address.
             s_calc: begin
-                // Accumulate current data (available from request in previous cycle)
-                // Note: We use signed arithmetic as standard practice for C int
+
                 accum_c = accum + ($signed(a_dout) * $signed(b_dout));
                 
-                // Determine next step
                 if (k < N) begin
-                    // Prepare address for NEXT k (k+1)
-                    // Note: k_c updates to k+1 at the edge, so we use k+1 for address
-                     // We need to fetch data for k+1. 
-                    // However, we must stop fetching when k reaches N-1 (data for N-1 is arriving now)
                     
                     k_c = k + 1'b1;
-                    
+    
                     if (k < (N - 1)) begin
-                        // Request next data
-                        a_addr = {i[2:0], k_c[2:0]}; // (i*8) + (k+1)
-                        b_addr = {k_c[2:0], j[2:0]}; // ((k+1)*8) + j
+                        a_addr = {i[2:0], k_c[2:0]}; 
+                        b_addr = {k_c[2:0], j[2:0]};
                         state_c = s_calc;
                     end else begin
-                        // We just processed the last read (k=7) data request.
-                        // The loop finishes. Go to write.
                         state_c = s_write;
                     end
+
                 end 
             end
 
-            // Write: Store result to C
             s_write: begin
                 c_wr_en = 1'b1;
-                c_addr  = {i[2:0], j[2:0]}; // (i*8) + j
+                c_addr  = {i[2:0], j[2:0]}; 
                 c_din   = accum;
 
-                // Handle loop iterators for Rows (i) and Cols (j)
                 if (j < (N - 1)) begin
                     j_c = j + 1'b1;
                     state_c = s_setup;
@@ -145,7 +123,6 @@ module matmul
                         i_c = i + 1'b1;
                         state_c = s_setup;
                     end else begin
-                        // Matrix Mul Complete
                         done_c  = 1'b1;
                         state_c = s_idle;
                     end
