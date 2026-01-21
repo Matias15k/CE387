@@ -1,4 +1,3 @@
-
 module vectorsum 
 #(  parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 10,
@@ -22,7 +21,7 @@ state_t state, state_c;
 logic [ADDR_WIDTH-1:0] i, i_c;
 logic done_c, done_o;
 
-assign done <= done_o;
+assign done = done_o;
 
 always_ff @(posedge clock or posedge reset) begin
     if (reset) begin
