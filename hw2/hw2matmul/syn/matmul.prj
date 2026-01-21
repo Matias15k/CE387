@@ -1,4 +1,3 @@
-
 #project files
 add_file -verilog -vlog_std sysv "../sv/matmul_top.sv"
 add_file -verilog -vlog_std sysv "../sv/matmul.sv"
