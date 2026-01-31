@@ -19,8 +19,8 @@ module motion_detect_tb;
     localparam string SIM_MASK       = "sim_mask.bmp";
 
     localparam CLOCK_PERIOD = 10;
-    localparam WIDTH = 720;
-    localparam HEIGHT = 540;
+    localparam WIDTH = 768;
+    localparam HEIGHT = 576;
     localparam BMP_HEADER_SIZE = 54;
     localparam BYTES_PER_PIXEL = 3; // 24-bit color
     localparam BMP_DATA_SIZE = WIDTH * HEIGHT * BYTES_PER_PIXEL;
@@ -96,9 +96,7 @@ module motion_detect_tb;
         wait(out_done && base_gs_done && img_gs_done && mask_done);
         
         end_time = $time;
-        $display("\n-------------------------------------------------------------");
         $display("@ %0t: Simulation Completed.", end_time);
-        $display("-------------------------------------------------------------");
         $display("Total Cycles: %0d", (end_time - start_time) / CLOCK_PERIOD);
         $display("Errors - Final Output: %0d", err_final);
         $display("Errors - Base Grayscale: %0d", err_base_gs);
@@ -106,10 +104,9 @@ module motion_detect_tb;
         $display("Errors - Mask:           %0d", err_mask);
         
         if (err_final + err_base_gs + err_img_gs + err_mask == 0)
-            $display("SUCCESS: All outputs match golden references!");
+            $display("SUCCESS: All outputs match references!");
         else
             $display("FAILURE: Errors detected.");
-        $display("-------------------------------------------------------------\n");
         $finish;
     end
 
