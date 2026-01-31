@@ -1,6 +1,6 @@
 module motion_detect_top #(
     parameter DATA_WIDTH = 24,
-    parameter FIFO_DEPTH = 64
+    parameter FIFO_DEPTH = 1024
 )(
     input  logic clock,
     input  logic reset,
