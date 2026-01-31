@@ -44,7 +44,7 @@ module highlight_image (
                     if (mask_dout == 8'hFF) begin
                         // Highlight Red: R=0xFF, G=0x00, B=0x00
                         // Assuming [23:16]=R
-                        pixel_out_c = 24'hFF0000;
+                        pixel_out_c = 24'h0000FF;
                     end else begin
                         // Keep original pixel
                         pixel_out_c = orig_dout;
