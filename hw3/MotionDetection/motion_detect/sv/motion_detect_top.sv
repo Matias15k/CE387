@@ -105,14 +105,14 @@ module motion_detect_top #(
 
     // --- 3. FIFOs after Grayscale (Buffers for Subtraction) ---
 
-    fifo #(.FIFO_DATA_WIDTH(24), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
+    fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_gray_bg (
         .reset(reset), .wr_clk(clock), .rd_clk(clock),
         .wr_en(gray_bg_wr_en), .din(gray_bg_dout), .full(gray_bg_full),
         .rd_en(gray_bg_fifo_rd_en), .dout(gray_bg_fifo_dout), .empty(gray_bg_fifo_empty)
     );
 
-    fifo #(.FIFO_DATA_WIDTH(24), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
+    fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_gray_fr (
         .reset(reset), .wr_clk(clock), .rd_clk(clock),
         .wr_en(gray_fr_wr_en), .din(gray_fr_dout), .full(gray_fr_full),
@@ -132,7 +132,7 @@ module motion_detect_top #(
 
     // --- 5. FIFO for Mask ---
 
-    fifo #(.FIFO_DATA_WIDTH(24), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
+    fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_mask (
         .reset(reset), .wr_clk(clock), .rd_clk(clock),
         .wr_en(mask_wr_en), .din(mask_dout), .full(mask_full),
