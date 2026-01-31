@@ -1,7 +1,7 @@
 module highlight_image (
     input  logic        clock,
     input  logic        reset,
-    // Interface to Original Frame Copy FIFO
+    // Interface to original Frame Copy FIFO
     output logic        orig_rd_en,
     input  logic        orig_empty,
     input  logic [23:0] orig_dout,
@@ -39,14 +39,10 @@ module highlight_image (
 
         case (state)
             s0: begin
-                // Wait for BOTH the mask and the buffered original frame
                 if (!orig_empty && !mask_empty) begin
                     if (mask_dout == 8'hFF) begin
-                        // Highlight Red: R=0xFF, G=0x00, B=0x00
-                        // Assuming [23:16]=R
-                        pixel_out_c = 24'h0000FF;
+                        pixel_out_c = 24'h0000FF; //makes it red
                     end else begin
-                        // Keep original pixel
                         pixel_out_c = orig_dout;
                     end
                     
@@ -57,7 +53,6 @@ module highlight_image (
             end
 
             s1: begin
-                // Write final pixel to output
                 if (!out_full) begin
                     out_din = pixel_out;
                     out_wr_en = 1'b1;

@@ -20,8 +20,6 @@ module motion_detect_top #(
     input  logic out_rd_en,
     output logic [DATA_WIDTH-1:0] out_dout
 );
-
-    // --- Internal Signals ---
     
     // Background Path
     logic [23:0] bg_fifo_dout;
@@ -53,18 +51,13 @@ module motion_detect_top #(
     logic [23:0] final_din;
     logic final_wr_en, final_full;
 
-    // --- Input Logic: Splitting Frame Stream ---
-    // The frame input writes to TWO FIFOs simultaneously.
-    // If either is full, we report full upstream.
     logic fr_proc_full, fr_copy_full;
     assign fr_full = fr_proc_full | fr_copy_full;
     
-    // We only write if neither is full
     logic internal_fr_wr_en;
     assign internal_fr_wr_en = fr_wr_en & ~fr_full;
 
 
-    // --- 1. FIFOs for Inputs ---
 
     fifo #(.FIFO_DATA_WIDTH(24), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_bg_in (
@@ -88,7 +81,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 2. Grayscale Modules ---
 
     grayscale bg_gray_inst (
         .clock(clock), .reset(reset),
@@ -103,7 +95,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 3. FIFOs after Grayscale (Buffers for Subtraction) ---
 
     fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_gray_bg (
@@ -120,7 +111,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 4. Subtract Background Module ---
 
     subtract_background #(.THRESHOLD(50)) sub_inst (
         .clock(clock), .reset(reset),
@@ -130,7 +120,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 5. FIFO for Mask ---
 
     fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_mask (
@@ -140,7 +129,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 6. Highlight Module ---
 
     highlight_image hl_inst (
         .clock(clock), .reset(reset),
@@ -150,7 +138,6 @@ module motion_detect_top #(
     );
 
 
-    // --- 7. Final Output FIFO ---
 
     fifo #(.FIFO_DATA_WIDTH(24), .FIFO_BUFFER_SIZE(FIFO_DEPTH)) 
     fifo_out (

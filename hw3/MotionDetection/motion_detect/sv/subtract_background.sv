@@ -41,19 +41,15 @@ module subtract_background #(
 
         case (state)
             s0: begin
-                // Wait for BOTH background and frame pixels to be ready
                 if (!bg_empty && !fr_empty) begin
-                    // Calculate Absolute Difference
                     logic [7:0] diff;
                     if (fr_dout > bg_dout)
                         diff = fr_dout - bg_dout;
                     else
                         diff = bg_dout - fr_dout;
 
-                    // Apply Threshold
                     mask_val_c = (diff > THRESHOLD) ? 8'hFF : 8'h00;
                     
-                    // Consume inputs
                     bg_rd_en = 1'b1;
                     fr_rd_en = 1'b1;
                     state_c = s1;
@@ -61,7 +57,6 @@ module subtract_background #(
             end
 
             s1: begin
-                // Write mask to output FIFO
                 if (!mask_full) begin
                     mask_din = mask_val;
                     mask_wr_en = 1'b1;
