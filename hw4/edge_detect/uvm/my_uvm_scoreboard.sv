@@ -50,7 +50,7 @@ class my_uvm_scoreboard extends uvm_scoreboard;
             // use uvm_fatal to halt the simulation on error
             `uvm_info("SB_CMP", tx_out.sprint(), UVM_LOW);
             `uvm_info("SB_CMP", tx_cmp.sprint(), UVM_LOW);
-            `uvm_fatal("SB_CMP", $sformatf("Test: Failed! Expecting: %08x, Received: %08x", tx_cmp.image_pixel, tx_out.image_pixel))
+            `uvm_error("SB_CMP", $sformatf("Test: Failed! Expecting: %08x, Received: %08x", tx_cmp.image_pixel, tx_out.image_pixel))
         end
     endfunction: comparison
 endclass: my_uvm_scoreboard
