@@ -25,7 +25,7 @@ vsim -classdebug -voptargs=+acc +notimingchecks -L work work.my_uvm_tb -wlf my_u
 # start basic simulation
 #vsim -voptargs=+acc +notimingchecks -L work work.grayscale_tb -wlf grayscale_tb.wlf
 
-do grayscale_wave.do
+do edge_detect_wave.do
 
 run -all
 #quit;
