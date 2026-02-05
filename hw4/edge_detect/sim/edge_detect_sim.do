@@ -3,11 +3,12 @@ setenv LMC_TIMEUNIT -9
 vlib work
 vmap work work
 
-# grayscale architecture
+# edge detect architecture
 vlog -work work "../sv/fifo.sv"
 vlog -work work "../sv/grayscale.sv"
-vlog -work work "../sv/grayscale_top.sv"
-#vlog -work work "../sv/grayscale_tb.sv"
+vlog -work work "../sv/sobel_filter.sv"      
+vlog -work work "../sv/edge_detection_top.sv"
+vlog -work work "../sv/edge_detection_tb.sv"
 
 # uvm library
 vlog -work work +incdir+$env(UVM_HOME)/src $env(UVM_HOME)/src/uvm.sv

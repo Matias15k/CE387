@@ -3,8 +3,8 @@
 
 // UVM Globals
 localparam string IMG_IN_NAME  = "image.bmp";
-localparam string IMG_OUT_NAME = "output.bmp";
-localparam string IMG_CMP_NAME = "grayscale.bmp";
+localparam string IMG_OUT_NAME = "output_sobel.bmp";
+localparam string IMG_CMP_NAME = "stage2_sobel.bmp";
 localparam int IMG_WIDTH = 720;
 localparam int IMG_HEIGHT = 540;
 localparam int BMP_HEADER_SIZE = 54;

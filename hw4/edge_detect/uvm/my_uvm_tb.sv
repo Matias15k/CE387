@@ -10,10 +10,10 @@ module my_uvm_tb;
 
     my_uvm_if vif();
 
-    grayscale_top #(
+    edge_detection_top #(
         .WIDTH(IMG_WIDTH),
         .HEIGHT(IMG_HEIGHT)
-    ) grayscale_inst (
+    ) dut (
         .clock(vif.clock),
         .reset(vif.reset),
         .in_full(vif.in_full),
@@ -23,6 +23,7 @@ module my_uvm_tb;
         .out_rd_en(vif.out_rd_en),
         .out_dout(vif.out_dout)
     );
+
 
     initial begin
         // store the vif so it can be retrieved by the driver & monitor
