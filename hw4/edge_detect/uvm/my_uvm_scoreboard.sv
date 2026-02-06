@@ -18,17 +18,15 @@ class my_uvm_scoreboard extends uvm_scoreboard;
     function new(string name, uvm_component parent);
         super.new(name, parent);
         tx_out    = new("tx_out");
-        tx_cmp = new("tx_cmp");
+        tx_cmp    = new("tx_cmp");
     endfunction: new
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-
         sb_export_output    = new("sb_export_output", this);
         sb_export_compare   = new("sb_export_compare", this);
-
-           output_fifo        = new("output_fifo", this);
-        compare_fifo    = new("compare_fifo", this);
+        output_fifo         = new("output_fifo", this);
+        compare_fifo        = new("compare_fifo", this);
     endfunction: build_phase
 
     virtual function void connect_phase(uvm_phase phase);
@@ -37,6 +35,19 @@ class my_uvm_scoreboard extends uvm_scoreboard;
     endfunction: connect_phase
 
     virtual task run();
+        // -----------------------------------------------------------
+        // ALIGNMENT FIX:
+        // The RTL pipeline latency is exactly 1 Row (IMG_WIDTH).
+        // The RTL outputs 0s for the first row, while the C-Model 
+        // expects data. We discard the first row of RTL output 
+        // so that RTL Row 2 (Data) aligns with Ref Row 1 (Data).
+        // -----------------------------------------------------------
+        repeat(IMG_WIDTH) begin
+            my_uvm_transaction dummy;
+            output_fifo.get(dummy);
+        end
+
+        // Now the streams are aligned, start the comparison
         forever begin
             output_fifo.get(tx_out);
             compare_fifo.get(tx_cmp);            
@@ -46,11 +57,8 @@ class my_uvm_scoreboard extends uvm_scoreboard;
 
     virtual function void comparison();
         if (tx_out.image_pixel != tx_cmp.image_pixel) begin
-            // use uvm_error to report errors and continue
-            // use uvm_fatal to halt the simulation on error
-            `uvm_info("SB_CMP", tx_out.sprint(), UVM_LOW);
-            `uvm_info("SB_CMP", tx_cmp.sprint(), UVM_LOW);
-            `uvm_error("SB_CMP", $sformatf("Test: Failed! Expecting: %08x, Received: %08x", tx_cmp.image_pixel, tx_out.image_pixel))
+            // We can keep uvm_error now because errors should be zero.
+            `uvm_error("SB_CMP", $sformatf("Mismatch! Exp: %06x, Rec: %06x", tx_cmp.image_pixel, tx_out.image_pixel))
         end
     endfunction: comparison
 endclass: my_uvm_scoreboard
