@@ -28,6 +28,7 @@ class my_uvm_monitor_output extends uvm_monitor;
 
     virtual task run_phase(uvm_phase phase);
         int n_bytes;
+        int latency_count = 0; // Counter to track discarded pixels
         logic [0:BMP_HEADER_SIZE-1][7:0] bmp_header;
         my_uvm_transaction tx_out;
 
@@ -37,7 +38,7 @@ class my_uvm_monitor_output extends uvm_monitor;
 
         tx_out = my_uvm_transaction::type_id::create(.name("tx_out"), .contxt(get_full_name()));
 
-        // get the stored BMP header as packed array
+        // get the stored BMP header
         if ( !uvm_config_db#(logic[0:BMP_HEADER_SIZE-1][7:0])::get(null, "*", "bmp_header", bmp_header) ) begin
             `uvm_fatal("MON_OUT_RUN", $sformatf("Failed to retrieve BMP header data for file %s...", IMG_CMP_NAME));
         end
@@ -53,10 +54,24 @@ class my_uvm_monitor_output extends uvm_monitor;
             @(negedge vif.clock)
             begin
                 if (vif.out_empty == 1'b0) begin
-                    $fwrite(out_file, "%c%c%c", vif.out_dout, vif.out_dout, vif.out_dout);
-                    tx_out.image_pixel = {3{vif.out_dout}};
-                    mon_ap_output.write(tx_out);
-                    vif.out_rd_en = 1'b1;
+                    
+                    // --- ALIGNMENT FIX START ---
+                    // The Sobel filter has a latency of 1 Row + 1 Pixel.
+                    // We discard the first (IMG_WIDTH + 1) outputs because they are just 
+                    // the zeros generated while the pipeline was filling up.
+                    if (latency_count < IMG_WIDTH + 1) begin
+                        latency_count++;
+                        vif.out_rd_en = 1'b1; // Read from FIFO, but DO NOT write to file/scoreboard
+                    end 
+                    else begin
+                        // Valid data - Write to file and Scoreboard
+                        $fwrite(out_file, "%c%c%c", vif.out_dout, vif.out_dout, vif.out_dout);
+                        tx_out.image_pixel = {3{vif.out_dout}};
+                        mon_ap_output.write(tx_out);
+                        vif.out_rd_en = 1'b1;
+                    end
+                    // --- ALIGNMENT FIX END ---
+
                 end else begin
                     vif.out_rd_en = 1'b0;
                 end
