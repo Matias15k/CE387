@@ -207,4 +207,5 @@ module sobel_filter #(
             end
         endcase
     end
+
 endmodule
