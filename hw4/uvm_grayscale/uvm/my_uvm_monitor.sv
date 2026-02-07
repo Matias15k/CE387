@@ -103,37 +103,52 @@ class my_uvm_monitor_compare extends uvm_monitor;
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
-        int n_bytes=0, i=0;
-        logic [23:0] pixel;
-        my_uvm_transaction tx_cmp;
-
-        // extend the run_phase 20 clock cycles
-        phase.phase_done.set_drain_time(this, (CLOCK_PERIOD*20));
-
-        // notify that run_phase has started
-        phase.raise_objection(.obj(this));
+        int n_bytes;
+        int latency_count = 0; // Counter to track discarded pixels
+        logic [0:BMP_HEADER_SIZE-1][7:0] bmp_header;
+        my_uvm_transaction tx_out;
 
         // wait for reset
         @(posedge vif.reset)
         @(negedge vif.reset)
 
-        tx_cmp = my_uvm_transaction::type_id::create(.name("tx_cmp"), .contxt(get_full_name()));
+        tx_out = my_uvm_transaction::type_id::create(.name("tx_out"), .contxt(get_full_name()));
 
-        // syncronize file read with fifo data
-        while ( !$feof(cmp_file) && i < BMP_DATA_SIZE ) begin
+        // get the stored BMP header
+        if ( !uvm_config_db#(logic[0:BMP_HEADER_SIZE-1][7:0])::get(null, "*", "bmp_header", bmp_header) ) begin
+            `uvm_fatal("MON_OUT_RUN", $sformatf("Failed to retrieve BMP header data for file %s...", IMG_CMP_NAME));
+        end
+
+        // copy the BMP header to the output file
+        for (int i = 0; i < BMP_HEADER_SIZE; i++) begin
+            $fwrite(out_file, "%c", bmp_header[i]);
+        end
+
+        vif.out_rd_en = 1'b0;
+
+        forever begin
             @(negedge vif.clock)
             begin
-                if ( vif.out_empty == 1'b0 ) begin
-                    n_bytes = $fread(pixel, cmp_file, BMP_HEADER_SIZE+i, BYTES_PER_PIXEL);
-                    tx_cmp.image_pixel = pixel;
-                    mon_ap_compare.write(tx_cmp);
-                    i += BYTES_PER_PIXEL;
+                if (vif.out_empty == 1'b0) begin
+                    
+                    // ALIGNMENT FIX:
+                    // Discard the first 'IMG_WIDTH + 1' outputs. 
+                    // These are the "0" values generated while the pipeline was filling.
+                    if (latency_count < IMG_WIDTH + 1) begin
+                        latency_count++;
+                        vif.out_rd_en = 1'b1; // Pop from FIFO but DO NOT write to file
+                    end else begin
+                        // Valid data - Write to file and Scoreboard
+                        $fwrite(out_file, "%c%c%c", vif.out_dout, vif.out_dout, vif.out_dout);
+                        tx_out.image_pixel = {3{vif.out_dout}};
+                        mon_ap_output.write(tx_out);
+                        vif.out_rd_en = 1'b1;
+                    end
+                end else begin
+                    vif.out_rd_en = 1'b0;
                 end
             end
-        end        
-
-        // notify that run_phase has completed
-        phase.drop_objection(.obj(this));
+        end
     endtask: run_phase
 
     virtual function void final_phase(uvm_phase phase);
