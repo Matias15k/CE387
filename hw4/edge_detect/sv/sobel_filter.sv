@@ -1,7 +1,7 @@
 module sobel_filter #(
     parameter WIDTH = 720,
     parameter HEIGHT = 540
-)(
+) (
     input  logic        clock,
     input  logic        reset,
     output logic        in_rd_en,
@@ -12,136 +12,165 @@ module sobel_filter #(
     output logic [7:0]  out_din
 );
 
-    typedef enum logic [0:0] {s0, s1} state_types;
-    state_types state, state_c;
+    typedef enum logic [1:0] {IDLE, FILL, RUN} state_t;
+    state_t state, state_c;
 
-    logic        lb0_wr_en, lb1_wr_en;
-    logic        lb0_rd_en, lb1_rd_en;
-    logic [7:0]  lb0_din,   lb1_din;
-    logic [7:0]  lb0_dout,  lb1_dout;
-    logic        lb0_full,  lb1_full;
-    logic        lb0_empty, lb1_empty;
+    // Line buffers
+    logic [7:0] line_buf0 [0:WIDTH-1];
+    logic [7:0] line_buf1 [0:WIDTH-1];
+    logic [7:0] line_buf2 [0:WIDTH-1];
 
-    logic [10:0] x_cnt, x_cnt_c;
-    logic [10:0] y_cnt, y_cnt_c;
+    // Position tracking
+    logic [$clog2(WIDTH)-1:0] in_x, in_x_c;
+    logic [$clog2(WIDTH)-1:0] out_x, out_x_c;
+    logic [$clog2(HEIGHT)-1:0] out_y, out_y_c;
 
-    logic [7:0] window [2:0][2:0]; 
-    logic [7:0] window_c [2:0][2:0];
-    logic [7:0] output_reg, output_reg_c;
-    logic       valid_data, valid_data_c;
+    localparam TOTAL_PIXELS = WIDTH * HEIGHT;
+    logic [$clog2(TOTAL_PIXELS):0] in_count, in_count_c;
+    logic [$clog2(TOTAL_PIXELS):0] out_count, out_count_c;
 
-    // Line Buffers
-    fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(1024)) lb0 (
-        .reset(reset), .wr_clk(clock), .rd_clk(clock),
-        .wr_en(lb0_wr_en), .din(lb0_din), .full(lb0_full),
-        .rd_en(lb0_rd_en), .dout(lb0_dout), .empty(lb0_empty)
-    );
+    // 3x3 window
+    logic [7:0] win_tl, win_tc, win_tr;
+    logic [7:0] win_ml, win_mc, win_mr;
+    logic [7:0] win_bl, win_bc, win_br;
 
-    fifo #(.FIFO_DATA_WIDTH(8), .FIFO_BUFFER_SIZE(1024)) lb1 (
-        .reset(reset), .wr_clk(clock), .rd_clk(clock),
-        .wr_en(lb1_wr_en), .din(lb1_din), .full(lb1_full),
-        .rd_en(lb1_rd_en), .dout(lb1_dout), .empty(lb1_empty)
-    );
+    // Gradients
+    logic signed [11:0] h_grad, v_grad;
+    logic [11:0] abs_h, abs_v;
+    logic [12:0] sum_grad;
+    logic [7:0] sobel_out;
+    logic valid_window;
+    
+    // Control signals
+    logic do_read, do_write;
 
+    // Window extraction and gradient (combinational)
+    always_comb begin
+        win_tl = 8'd0; win_tc = 8'd0; win_tr = 8'd0;
+        win_ml = 8'd0; win_mc = 8'd0; win_mr = 8'd0;
+        win_bl = 8'd0; win_bc = 8'd0; win_br = 8'd0;
+        valid_window = 1'b0;
+
+        if (out_y > 0 && out_y < HEIGHT - 1 && out_x > 0 && out_x < WIDTH - 1) begin
+            valid_window = 1'b1;
+            win_tl = line_buf0[out_x - 1]; win_tc = line_buf0[out_x]; win_tr = line_buf0[out_x + 1];
+            win_ml = line_buf1[out_x - 1]; win_mc = line_buf1[out_x]; win_mr = line_buf1[out_x + 1];
+            win_bl = line_buf2[out_x - 1]; win_bc = line_buf2[out_x]; win_br = line_buf2[out_x + 1];
+        end
+
+        h_grad = -$signed({4'b0, win_tl}) - $signed({3'b0, win_tc, 1'b0}) - $signed({4'b0, win_tr})
+                 +$signed({4'b0, win_bl}) + $signed({3'b0, win_bc, 1'b0}) + $signed({4'b0, win_br});
+        v_grad = -$signed({4'b0, win_tl}) + $signed({4'b0, win_tr})
+                 -$signed({3'b0, win_ml, 1'b0}) + $signed({3'b0, win_mr, 1'b0})
+                 -$signed({4'b0, win_bl}) + $signed({4'b0, win_br});
+
+        abs_h = (h_grad < 0) ? 12'($unsigned(-h_grad)) : 12'($unsigned(h_grad));
+        abs_v = (v_grad < 0) ? 12'($unsigned(-v_grad)) : 12'($unsigned(v_grad));
+        sum_grad = {1'b0, abs_h} + {1'b0, abs_v};
+
+        sobel_out = valid_window ? ((sum_grad[12:1] > 255) ? 8'd255 : sum_grad[8:1]) : 8'd0;
+    end
+
+    // Sequential
     always_ff @(posedge clock or posedge reset) begin
         if (reset) begin
-            state <= s0;
-            x_cnt <= '0; y_cnt <= '0;
-            output_reg <= '0; valid_data <= '0;
-            for(int i=0; i<3; i++) for(int j=0; j<3; j++) window[i][j] <= '0;
+            state <= IDLE;
+            in_x <= '0;
+            out_x <= '0;
+            out_y <= '0;
+            in_count <= '0;
+            out_count <= '0;
+            for (int i = 0; i < WIDTH; i++) begin
+                line_buf0[i] <= 8'd0;
+                line_buf1[i] <= 8'd0;
+                line_buf2[i] <= 8'd0;
+            end
         end else begin
             state <= state_c;
-            x_cnt <= x_cnt_c; y_cnt <= y_cnt_c;
-            output_reg <= output_reg_c; valid_data <= valid_data_c;
-            window <= window_c;
+            in_x <= in_x_c;
+            out_x <= out_x_c;
+            out_y <= out_y_c;
+            in_count <= in_count_c;
+            out_count <= out_count_c;
+
+            // Update line buffers on read
+            if (do_read) begin
+                if (in_x == 0 && in_count > 0) begin
+                    for (int i = 0; i < WIDTH; i++) begin
+                        line_buf0[i] <= line_buf1[i];
+                        line_buf1[i] <= line_buf2[i];
+                    end
+                end
+                line_buf2[in_x] <= in_dout;
+            end
         end
     end
 
-    int gx, gy, abs_gx, abs_gy, total;
-
+    // State machine - read and write can happen in parallel
     always_comb begin
-        in_rd_en = 0; out_wr_en = 0; out_din = output_reg; 
-        lb0_wr_en = 0; lb0_din = 0; lb0_rd_en = 0;
-        lb1_wr_en = 0; lb1_din = 0; lb1_rd_en = 0;
-
-        state_c = state; x_cnt_c = x_cnt; y_cnt_c = y_cnt;
-        output_reg_c = output_reg; window_c = window; valid_data_c = valid_data;
+        in_rd_en = 1'b0;
+        out_wr_en = 1'b0;
+        out_din = 8'd0;
+        do_read = 1'b0;
+        do_write = 1'b0;
+        state_c = state;
+        in_x_c = in_x;
+        out_x_c = out_x;
+        out_y_c = out_y;
+        in_count_c = in_count;
+        out_count_c = out_count;
 
         case (state)
-            s0: begin // READ
-                if (!in_empty && !lb0_full && !lb1_full) begin
-                    // 1. Shift Window
-                    for(int i=0; i<3; i++) begin
-                        window_c[i][0] = window[i][1];
-                        window_c[i][1] = window[i][2];
-                    end
+            IDLE: begin
+                if (!in_empty)
+                    state_c = FILL;
+            end
 
-                    // 2. Read New Pixel
-                    in_rd_en = 1;
-                    window_c[2][2] = in_dout;
-
-                    // 3. Line Buffer Write
-                    lb0_din = in_dout;
-                    lb0_wr_en = 1;
-
-                    // 4. Line Buffer Read
-                    if (y_cnt >= 1) begin
-                        lb0_rd_en = 1;
-                        window_c[1][2] = lb0_dout;
-                        lb1_din = lb0_dout;
-                        lb1_wr_en = 1;
-                    end
-                    if (y_cnt >= 2) begin
-                        lb1_rd_en = 1;
-                        window_c[0][2] = lb1_dout;
-                    end
-
-                    // 5. Sobel Calculation
-                    output_reg_c = 0; // Default to Black
-                    
-                    // FIX: This condition determines if we calculate math, 
-                    // BUT we must produce output for every pixel regardless.
-                    if (y_cnt >= 2 && x_cnt >= 2 && x_cnt < WIDTH) begin
-                         gx = ($signed({1'b0, window_c[0][2]}) - $signed({1'b0, window_c[0][0]})) + 
-                              ($signed({1'b0, window_c[1][2]}) - $signed({1'b0, window_c[1][0]}) ) * 2 + 
-                              ($signed({1'b0, window_c[2][2]}) - $signed({1'b0, window_c[2][0]}));
-
-                         gy = ($signed({1'b0, window_c[2][0]}) - $signed({1'b0, window_c[0][0]})) + 
-                              ($signed({1'b0, window_c[2][1]}) - $signed({1'b0, window_c[0][1]}) ) * 2 + 
-                              ($signed({1'b0, window_c[2][2]}) - $signed({1'b0, window_c[0][2]}));
-
-                        abs_gx = (gx < 0) ? -gx : gx;
-                        abs_gy = (gy < 0) ? -gy : gy;
-                        total = (abs_gx + abs_gy) / 2;
-                        if (total > 255) total = 255;
-                        output_reg_c = 8'(total);
-                    end 
-
-                    // 6. Update Counters
-                    if (x_cnt == WIDTH - 1) begin
-                        x_cnt_c = 0;
-                        if (y_cnt == HEIGHT - 1) y_cnt_c = 0; else y_cnt_c = y_cnt + 1;
-                    end else begin
-                        x_cnt_c = x_cnt + 1;
-                    end
-
-                    // 7. ALWAYS transition to Write
-                    // This forces black pixels out even during the buffering (y < 2)
-                    // fixing the "Shift Up" / missing rows issue.
-                    valid_data_c = 1;
-                    state_c = s1;
+            FILL: begin
+                // Fill line buffers before starting output
+                if (!in_empty) begin
+                    in_rd_en = 1'b1;
+                    do_read = 1'b1;
+                    in_x_c = (in_x == WIDTH - 1) ? '0 : in_x + 1'b1;
+                    in_count_c = in_count + 1'b1;
+                    if (in_count >= WIDTH + 1)
+                        state_c = RUN;
                 end
             end
 
-            s1: begin // WRITE
-                if (!out_full) begin
-                    if (valid_data) begin
-                        out_din = output_reg;
-                        out_wr_en = 1;
-                    end
-                    state_c = s0;
+            RUN: begin
+                // Read if input available and not done
+                if (!in_empty && in_count < TOTAL_PIXELS) begin
+                    in_rd_en = 1'b1;
+                    do_read = 1'b1;
+                    in_x_c = (in_x == WIDTH - 1) ? '0 : in_x + 1'b1;
+                    in_count_c = in_count + 1'b1;
+                end
+
+                // Write if output space available, not done, and have enough data
+                if (!out_full && out_count < TOTAL_PIXELS && 
+                    (in_count >= TOTAL_PIXELS || in_count > out_count + WIDTH + 1)) begin
+                    out_din = sobel_out;
+                    out_wr_en = 1'b1;
+                    do_write = 1'b1;
+                    out_x_c = (out_x == WIDTH - 1) ? '0 : out_x + 1'b1;
+                    out_y_c = (out_x == WIDTH - 1) ? out_y + 1'b1 : out_y;
+                    out_count_c = out_count + 1'b1;
+                end
+
+                // Done
+                if (out_count >= TOTAL_PIXELS - 1 && do_write) begin
+                    state_c = IDLE;
+                    in_x_c = '0;
+                    out_x_c = '0;
+                    out_y_c = '0;
+                    in_count_c = '0;
+                    out_count_c = '0;
                 end
             end
+
+            default: state_c = IDLE;
         endcase
     end
+
 endmodule

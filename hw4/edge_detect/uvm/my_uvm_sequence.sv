@@ -40,23 +40,14 @@ class my_uvm_sequence extends uvm_sequence#(my_uvm_transaction);
             `uvm_fatal("SEQ_RUN", $sformatf("Failed read header data from %s...", IMG_IN_NAME));
         end
 
-        // 1. Send the Actual Image Pixels
         while ( !$feof(in_file) && i < BMP_DATA_SIZE ) begin
             tx = my_uvm_transaction::type_id::create(.name("tx"), .contxt(get_full_name()));
             start_item(tx);
             n_bytes = $fread(pixel, in_file, BMP_HEADER_SIZE+i, BYTES_PER_PIXEL);
             tx.image_pixel = pixel;
+            //`uvm_info("SEQ_RUN", tx.sprint(), UVM_LOW);
             finish_item(tx);
             i += BYTES_PER_PIXEL;
-        end
-
-        // 2. SEND PADDING (Crucial for Edge Detection)
-        // We send 'WIDTH + 1' extra black pixels to flush the line buffers.
-        repeat(IMG_WIDTH + 1) begin
-            tx = my_uvm_transaction::type_id::create(.name("tx"), .contxt(get_full_name()));
-            start_item(tx);
-            tx.image_pixel = 24'b0; // Dummy black pixel
-            finish_item(tx);
         end
 
         `uvm_info("SEQ_RUN", $sformatf("Closing file %s...", IMG_IN_NAME), UVM_LOW);
