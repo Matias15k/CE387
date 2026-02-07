@@ -76,7 +76,7 @@ module edge_detection_top #(
     );
 
     // Sobel filter
-    sobel #(
+    sobel_filter #(
         .WIDTH(WIDTH),
         .HEIGHT(HEIGHT)
     ) sobel_inst (
