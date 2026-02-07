@@ -113,8 +113,8 @@ fifo #(
 
     initial begin
         // 1. Open the original input to steal the BMP Header (54 bytes)
-        f_in = $fopen("copper.bmp", "rb");
-        if (f_in == 0) $display("Error: Could not open copper.bmp for debug header");
+        f_in = $fopen("copper_720_540.bmp", "rb");
+        if (f_in == 0) $display("Error: Could not open copper_720_540.bmp for debug header");
         
         // 2. Open the new output file
         f_out = $fopen("intermediate_grayscale.bmp", "wb");
