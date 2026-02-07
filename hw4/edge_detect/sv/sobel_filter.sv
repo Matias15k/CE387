@@ -32,7 +32,7 @@ module sobel_filter #(
 
     // 3x3 Window: window[row][col]
     // window[0] is the oldest row (top), window[2] is newest (bottom)
-    logic [7:0] window [2:0][2:0]; 
+    logic [7:0] window [2:0][2:0];
     logic [7:0] window_c [2:0][2:0];
 
     // Calculated Sobel Result
@@ -45,7 +45,7 @@ module sobel_filter #(
     // Line Buffer 0: Stores Row N-1 (Middle Row Source)
     fifo #(
         .FIFO_DATA_WIDTH(8),
-        .FIFO_BUFFER_SIZE(1024) 
+        .FIFO_BUFFER_SIZE(1024)
     ) lb0 (
         .reset(reset), .wr_clk(clock), .rd_clk(clock),
         .wr_en(lb0_wr_en), .din(lb0_din), .full(lb0_full),
@@ -94,14 +94,14 @@ module sobel_filter #(
         // Defaults
         in_rd_en     = 1'b0;
         out_wr_en    = 1'b0;
-        out_din      = output_reg; 
-        
-        lb0_wr_en    = 1'b0; 
-        lb0_din      = 8'b0; 
+        out_din      = output_reg;
+       
+        lb0_wr_en    = 1'b0;
+        lb0_din      = 8'b0;
         lb0_rd_en    = 1'b0;
-        
-        lb1_wr_en    = 1'b0; 
-        lb1_din      = 8'b0; 
+       
+        lb1_wr_en    = 1'b0;
+        lb1_din      = 8'b0;
         lb1_rd_en    = 1'b0;
 
         state_c      = state;
@@ -115,7 +115,7 @@ module sobel_filter #(
             s0: begin // PROCESS / READ STATE
                 // Proceed only if we have input data and space in line buffers
                 if (!in_empty && !lb0_full && !lb1_full) begin
-                    
+                   
                     // 1. Shift Window Columns Left
                     for(int i=0; i<3; i++) begin
                         window_c[i][0] = window[i][1];
@@ -131,14 +131,14 @@ module sobel_filter #(
                     lb0_wr_en = 1'b1;
 
                     // 4. Read from Line Buffers to populate Window
-                    // Note: FIFOs in this design are "Show Ahead". 
+                    // Note: FIFOs in this design are "Show Ahead".
                     // 'dout' is valid before 'rd_en' is asserted.
-                    
+                   
                     // Row 1 (Middle) comes from LB0
                     if (y_cnt >= 1) begin
                         lb0_rd_en = 1'b1;           // Pop FIFO for next cycle
                         window_c[1][2] = lb0_dout;  // Capture current valid pixel
-                        
+                       
                         // Pass Row 1 pixel to LB1 (to save for Top Row)
                         lb1_din   = lb0_dout;
                         lb1_wr_en = 1'b1;
@@ -153,23 +153,24 @@ module sobel_filter #(
                     // 5. Calculate Sobel
                     output_reg_c = 8'h00; // Default to black (0)
 
+                    // FIX: Added y_cnt < HEIGHT - 1 to handle bottom border
                     // Only compute valid Sobel if we are past the borders
-                    // y_cnt=2 means we have Rows 0,1,2 in the window.
-                    if (y_cnt >= 2 && x_cnt >= 2 && x_cnt < WIDTH - 1) begin
+                    if (y_cnt >= 2 && y_cnt < HEIGHT - 1 && x_cnt >= 2 && x_cnt < WIDTH - 1) begin
+
                         // Horizontal Mask (Gx)
                         // -1  0  1  (Row 0)
                         // -2  0  2  (Row 1)
                         // -1  0  1  (Row 2)
-                        gx = ($signed({1'b0, window_c[0][2]}) - $signed({1'b0, window_c[0][0]})) + 
-                             ($signed({1'b0, window_c[1][2]}) - $signed({1'b0, window_c[1][0]}) ) * 2 + 
+                        gx = ($signed({1'b0, window_c[0][2]}) - $signed({1'b0, window_c[0][0]})) +
+                             ($signed({1'b0, window_c[1][2]}) - $signed({1'b0, window_c[1][0]}) ) * 2 +
                              ($signed({1'b0, window_c[2][2]}) - $signed({1'b0, window_c[2][0]}));
 
                         // Vertical Mask (Gy)
                         //  -1 -2 -1 (Row 0)
                         //   0  0  0 (Row 1)
                         //   1  2  1 (Row 2)
-                        gy = ($signed({1'b0, window_c[2][0]}) - $signed({1'b0, window_c[0][0]})) + 
-                             ($signed({1'b0, window_c[2][1]}) - $signed({1'b0, window_c[0][1]}) ) * 2 + 
+                        gy = ($signed({1'b0, window_c[2][0]}) - $signed({1'b0, window_c[0][0]})) +
+                             ($signed({1'b0, window_c[2][1]}) - $signed({1'b0, window_c[0][1]}) ) * 2 +
                              ($signed({1'b0, window_c[2][2]}) - $signed({1'b0, window_c[0][2]}));
 
                         abs_gx = (gx < 0) ? -gx : gx;
@@ -178,7 +179,7 @@ module sobel_filter #(
 
                         if (total > 255) total = 255;
                         output_reg_c = 8'(total);
-                    end 
+                    end
 
                     // 6. Update Counters
                     if (x_cnt == WIDTH - 1) begin
@@ -190,7 +191,7 @@ module sobel_filter #(
                     end
 
                     // 7. Transition to Write State
-                    valid_data_c = 1'b1; 
+                    valid_data_c = 1'b1;
                     state_c = s1;
                 end
             end
@@ -206,5 +207,4 @@ module sobel_filter #(
             end
         endcase
     end
-
 endmodule
