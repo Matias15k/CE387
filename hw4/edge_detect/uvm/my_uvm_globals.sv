@@ -2,7 +2,7 @@
 `define __GLOBALS__
 
 // UVM Globals
-localparam string IMG_IN_NAME  = "image.bmp";
+localparam string IMG_IN_NAME  = "cooper_720_540.bmp";
 localparam string IMG_OUT_NAME = "output_sobel.bmp";
 localparam string IMG_CMP_NAME = "stage2_sobel.bmp";
 localparam int IMG_WIDTH = 720;

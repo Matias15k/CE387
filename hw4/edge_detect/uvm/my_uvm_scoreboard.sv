@@ -17,16 +17,16 @@ class my_uvm_scoreboard extends uvm_scoreboard;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
-        tx_out = new("tx_out");
-        tx_cmp = new("tx_cmp");
+        tx_out    = new("tx_out");
+        tx_cmp    = new("tx_cmp");
     endfunction: new
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        sb_export_output  = new("sb_export_output", this);
-        sb_export_compare = new("sb_export_compare", this);
-        output_fifo       = new("output_fifo", this);
-        compare_fifo      = new("compare_fifo", this);
+        sb_export_output    = new("sb_export_output", this);
+        sb_export_compare   = new("sb_export_compare", this);
+        output_fifo         = new("output_fifo", this);
+        compare_fifo        = new("compare_fifo", this);
     endfunction: build_phase
 
     virtual function void connect_phase(uvm_phase phase);
@@ -37,12 +37,12 @@ class my_uvm_scoreboard extends uvm_scoreboard;
     virtual task run();
         // ---------------------------------------------------------------------
         // LATENCY ALIGNMENT FIX:
-        // The Sobel RTL pipeline takes 1 full row to prime the line buffers.
-        // It outputs dummy 0s for the first 'IMG_WIDTH' pixels.
-        // We must discard these from the RTL stream to align with the C-Reference.
+        // 1. Vertical Delay: The RTL takes 1 full row to prime line buffers.
+        // 2. Horizontal Delay: The RTL needs x=2 to compute x=1. (1 pixel lag)
+        // Total Discard = IMG_WIDTH + 1
         // ---------------------------------------------------------------------
         my_uvm_transaction dummy;
-        repeat(IMG_WIDTH) begin
+        repeat(IMG_WIDTH + 1) begin
             output_fifo.get(dummy);
         end
 
@@ -55,5 +55,9 @@ class my_uvm_scoreboard extends uvm_scoreboard;
     endtask: run
 
     virtual function void comparison();
+        if (tx_out.image_pixel != tx_cmp.image_pixel) begin
+            // Report error if mismatch found
+            `uvm_error("SB_CMP", $sformatf("Mismatch! Exp: %06x, Rec: %06x", tx_cmp.image_pixel, tx_out.image_pixel))
+        end
     endfunction: comparison
 endclass: my_uvm_scoreboard

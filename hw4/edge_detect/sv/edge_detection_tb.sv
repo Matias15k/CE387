@@ -5,7 +5,7 @@ module edge_detection_tb;
     // -------------------------------------------------------------------------
     // Parameters
     // -------------------------------------------------------------------------
-    localparam string IMG_IN_NAME  = "image.bmp";          // Original Input
+    localparam string IMG_IN_NAME  = "cooper_720_540.bmp";          // Original Input
     localparam string IMG_OUT_NAME = "output_sobel.bmp";   // RTL Output
     localparam string IMG_CMP_NAME = "stage2_sobel.bmp";   // C Code Reference
     
