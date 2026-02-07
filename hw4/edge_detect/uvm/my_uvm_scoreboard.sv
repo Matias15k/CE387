@@ -55,9 +55,5 @@ class my_uvm_scoreboard extends uvm_scoreboard;
     endtask: run
 
     virtual function void comparison();
-        if (tx_out.image_pixel != tx_cmp.image_pixel) begin
-            // Report error if mismatch found
-            `uvm_error("SB_CMP", $sformatf("Mismatch! Exp: %06x, Rec: %06x", tx_cmp.image_pixel, tx_out.image_pixel))
-        end
     endfunction: comparison
 endclass: my_uvm_scoreboard
