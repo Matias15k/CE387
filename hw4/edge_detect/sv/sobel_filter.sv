@@ -155,7 +155,7 @@ module sobel_filter #(
 
                     // Only compute valid Sobel if we are past the borders
                     // y_cnt=2 means we have Rows 0,1,2 in the window.
-                    if (y_cnt >= 2 && x_cnt >= 2 && x_cnt < WIDTH) begin
+                    if (y_cnt >= 2 && x_cnt >= 2 && x_cnt < WIDTH - 1) begin
                         // Horizontal Mask (Gx)
                         // -1  0  1  (Row 0)
                         // -2  0  2  (Row 1)
