@@ -8,6 +8,7 @@ class my_uvm_monitor_output extends uvm_monitor;
     uvm_analysis_port#(my_uvm_transaction) mon_ap_output;
 
     virtual my_uvm_if vif;
+    int output_file;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -18,6 +19,13 @@ class my_uvm_monitor_output extends uvm_monitor;
         void'(uvm_resource_db#(virtual my_uvm_if)::read_by_name
             (.scope("ifs"), .name("vif"), .val(vif)));
         mon_ap_output = new(.name("mon_ap_output"), .parent(this));
+
+        // Open output file for writing parsed data
+        output_file = $fopen(SIM_OUTPUT_NAME, "wb");
+        if (!output_file) begin
+            `uvm_fatal("MON_OUT_BUILD", $sformatf("Failed to open output file %s", SIM_OUTPUT_NAME));
+        end
+        `uvm_info("MON_OUT_BUILD", $sformatf("Opened %s for writing parser output", SIM_OUTPUT_NAME), UVM_LOW);
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
@@ -39,6 +47,10 @@ class my_uvm_monitor_output extends uvm_monitor;
                     tx_out.sof  = vif.out_rd_sof;
                     tx_out.eof  = vif.out_rd_eof;
                     mon_ap_output.write(tx_out);
+
+                    // Write each parsed byte to output file
+                    $fwrite(output_file, "%c", tx_out.data);
+
                     vif.out_rd_en = 1'b1;
                 end else begin
                     vif.out_rd_en = 1'b0;
@@ -46,6 +58,14 @@ class my_uvm_monitor_output extends uvm_monitor;
             end
         end
     endtask: run_phase
+
+    virtual function void report_phase(uvm_phase phase);
+        super.report_phase(phase);
+        if (output_file) begin
+            $fclose(output_file);
+            `uvm_info("MON_OUT_REPORT", $sformatf("Closed output file %s", SIM_OUTPUT_NAME), UVM_LOW);
+        end
+    endfunction: report_phase
 
 endclass: my_uvm_monitor_output
 
