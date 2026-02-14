@@ -2,13 +2,11 @@
 module udp_parser (
     input  logic        clock,
     input  logic        reset,
-    // Input FIFO interface (fifo_ctrl read side)
     output logic        in_rd_en,
     input  logic        in_empty,
     input  logic [7:0]  in_dout,
     input  logic        in_sof,
     input  logic        in_eof,
-    // Output FIFO interface (fifo_ctrl write side)
     output logic        out_wr_en,
     input  logic        out_full,
     output logic [7:0]  out_din,
@@ -89,9 +87,6 @@ module udp_parser (
 
         case (state)
 
-            // -------------------------------------------------------
-            // IDLE: Wait for start-of-frame
-            // -------------------------------------------------------
             S_IDLE: begin
                 if (in_empty == 1'b0) begin
                     // Wait for SOF to begin packet parsing
@@ -112,12 +107,6 @@ module udp_parser (
                 end
             end
 
-            // -------------------------------------------------------
-            // ETH_HDR: Parse 14-byte Ethernet header
-            //   Bytes 0-5:   Destination MAC
-            //   Bytes 6-11:  Source MAC
-            //   Bytes 12-13: EtherType
-            // -------------------------------------------------------
             S_ETH_HDR: begin
                 if (in_empty == 1'b0) begin
                     in_rd_en = 1'b1;
@@ -149,19 +138,6 @@ module udp_parser (
                 end
             end
 
-            // -------------------------------------------------------
-            // IP_HDR: Parse 20-byte IP header
-            //   Byte 0:     Version (upper nibble) / Header Length (lower nibble)
-            //   Byte 1:     Type of Service
-            //   Bytes 2-3:  Total Length
-            //   Bytes 4-5:  Identification
-            //   Bytes 6-7:  Flags / Fragment Offset
-            //   Byte 8:     Time to Live
-            //   Byte 9:     Protocol
-            //   Bytes 10-11: Header Checksum
-            //   Bytes 12-15: Source Address
-            //   Bytes 16-19: Destination Address
-            // -------------------------------------------------------
             S_IP_HDR: begin
                 if (in_empty == 1'b0) begin
                     in_rd_en = 1'b1;
@@ -195,13 +171,6 @@ module udp_parser (
                 end
             end
 
-            // -------------------------------------------------------
-            // UDP_HDR: Parse 8-byte UDP header
-            //   Bytes 0-1: Source Port
-            //   Bytes 2-3: Destination Port
-            //   Bytes 4-5: Length
-            //   Bytes 6-7: Checksum
-            // -------------------------------------------------------
             S_UDP_HDR: begin
                 if (in_empty == 1'b0) begin
                     in_rd_en = 1'b1;
@@ -235,9 +204,6 @@ module udp_parser (
                 end
             end
 
-            // -------------------------------------------------------
-            // UDP_DATA: Read datagram bytes and write to output FIFO
-            // -------------------------------------------------------
             S_UDP_DATA: begin
                 if (in_empty == 1'b0 && out_full == 1'b0) begin
                     in_rd_en   = 1'b1;
@@ -262,9 +228,6 @@ module udp_parser (
                 end
             end
 
-            // -------------------------------------------------------
-            // FLUSH: Discard remaining packet bytes on validation error
-            // -------------------------------------------------------
             S_FLUSH: begin
                 if (in_empty == 1'b0) begin
                     in_rd_en = 1'b1;

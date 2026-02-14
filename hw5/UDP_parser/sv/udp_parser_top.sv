@@ -2,13 +2,11 @@
 module udp_parser_top (
     input  logic        clock,
     input  logic        reset,
-    // Input FIFO write interface (from testbench/UVM driver)
     output logic        in_full,
     input  logic        in_wr_en,
     input  logic [7:0]  in_din,
     input  logic        in_wr_sof,
     input  logic        in_wr_eof,
-    // Output FIFO read interface (to testbench/UVM monitor)
     output logic        out_empty,
     input  logic        out_rd_en,
     output logic [7:0]  out_dout,
