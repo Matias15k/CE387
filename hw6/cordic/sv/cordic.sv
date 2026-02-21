@@ -108,10 +108,11 @@ module cordic
             logic signed [15:0] tx, ty, tz;
 
             // Combinational CORDIC rotation for stage k
-            assign d  = (z[k] >= 16'sh0000) ? 16'sh0000 : 16'shFFFF;
-            assign tx = x[k] - (((y[k] >>> k) ^ d) - d);
-            assign ty = y[k] + (((x[k] >>> k) ^ d) - d);
-            assign tz = z[k] - ((CORDIC_TABLE[k] ^ d) - d);
+            // NOTE: packed array slices lose signedness, so $signed() is required
+            assign d  = ($signed(z[k]) >= 16'sh0000) ? 16'sh0000 : 16'shFFFF;
+            assign tx = $signed(x[k]) - ((($signed(y[k]) >>> k) ^ d) - d);
+            assign ty = $signed(y[k]) + ((($signed(x[k]) >>> k) ^ d) - d);
+            assign tz = $signed(z[k]) - ((CORDIC_TABLE[k] ^ d) - d);
 
             // Pipeline register for stage k
             always_ff @(posedge clock or posedge reset) begin
