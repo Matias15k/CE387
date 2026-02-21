@@ -4,21 +4,17 @@ module cordic_top #(
 ) (
     input  logic        clock,
     input  logic        reset,
-    // Input interface (32-bit radians)
     output logic        in_full,
     input  logic        in_wr_en,
     input  logic [31:0] in_din,
-    // Sin output interface (16-bit)
     output logic        sin_empty,
     input  logic        sin_rd_en,
     output logic [15:0] sin_dout,
-    // Cos output interface (16-bit)
     output logic        cos_empty,
     input  logic        cos_rd_en,
     output logic [15:0] cos_dout
 );
 
-    // Internal wires between cordic core and FIFOs
     logic [31:0] in_fifo_dout;
     logic        in_fifo_empty;
     logic        in_fifo_rd_en;
@@ -31,9 +27,7 @@ module cordic_top #(
     logic        cos_fifo_full;
     logic        cos_fifo_wr_en;
 
-    // =========================================================================
-    // Input FIFO: 32-bit wide, FIFO_DEPTH deep
-    // =========================================================================
+
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(32)
@@ -49,9 +43,6 @@ module cordic_top #(
         .empty(in_fifo_empty)
     );
 
-    // =========================================================================
-    // CORDIC core (16-stage pipeline)
-    // =========================================================================
     cordic cordic_inst (
         .clock(clock),
         .reset(reset),
@@ -66,9 +57,6 @@ module cordic_top #(
         .cos_din(cos_fifo_din)
     );
 
-    // =========================================================================
-    // Sin output FIFO: 16-bit wide, FIFO_DEPTH deep
-    // =========================================================================
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(16)
@@ -84,9 +72,6 @@ module cordic_top #(
         .empty(sin_empty)
     );
 
-    // =========================================================================
-    // Cos output FIFO: 16-bit wide, FIFO_DEPTH deep
-    // =========================================================================
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(16)
