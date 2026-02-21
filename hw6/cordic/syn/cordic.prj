@@ -5,6 +5,7 @@
 #project files
 add_file -verilog -vlog_std sysv "../sv/cordic_top.sv"
 add_file -verilog -vlog_std sysv "../sv/cordic.sv"
+add_file -verilog -vlog_std sysv "../sv/cordic_stage.sv"
 add_file -verilog -vlog_std sysv "../sv/fifo.sv"
 
 

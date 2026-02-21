@@ -4,6 +4,7 @@ import uvm_pkg::*;
 // =========================================================================
 // Output Monitor: reads sin and cos values from RTL output FIFOs
 // and writes them to out_sin.txt / out_cos.txt for visual comparison
+// Bounded to exactly NUM_THETA samples to prevent extra reads during drain
 // =========================================================================
 class my_uvm_monitor_output extends uvm_monitor;
     `uvm_component_utils(my_uvm_monitor_output)
@@ -12,6 +13,7 @@ class my_uvm_monitor_output extends uvm_monitor;
     virtual my_uvm_if vif;
     int sin_out_file;
     int cos_out_file;
+    int sample_count;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -46,9 +48,11 @@ class my_uvm_monitor_output extends uvm_monitor;
 
         vif.sin_rd_en = 1'b0;
         vif.cos_rd_en = 1'b0;
+        sample_count = 0;
 
-        forever begin
-            @(negedge vif.clock)
+        // Bounded loop: read exactly NUM_THETA samples, then stop
+        while (sample_count < NUM_THETA) begin
+            @(negedge vif.clock);
             begin
                 if (vif.sin_empty == 1'b0 && vif.cos_empty == 1'b0) begin
                     tx_out.sin_val = vif.sin_dout;
@@ -61,12 +65,20 @@ class my_uvm_monitor_output extends uvm_monitor;
                     mon_ap_output.write(tx_out);
                     vif.sin_rd_en = 1'b1;
                     vif.cos_rd_en = 1'b1;
+                    sample_count++;
                 end else begin
                     vif.sin_rd_en = 1'b0;
                     vif.cos_rd_en = 1'b0;
                 end
             end
         end
+
+        // De-assert rd_en after all samples collected
+        @(negedge vif.clock);
+        vif.sin_rd_en = 1'b0;
+        vif.cos_rd_en = 1'b0;
+
+        `uvm_info("MON_OUT_RUN", $sformatf("Finished reading %0d RTL output samples.", sample_count), UVM_LOW);
     endtask: run_phase
 
     virtual function void final_phase(uvm_phase phase);

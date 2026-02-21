@@ -36,7 +36,7 @@ module cordic
 
     // =========================================================================
     // Pipeline packed arrays (following mult_pipe.sv style)
-    // Index 0 = stage 0 output, Index STAGES-1 = final stage output
+    // x[0..STAGES]: index 0 = input to stage 0, index STAGES = output of stage 15
     // =========================================================================
     logic signed [0:STAGES] [15:0] x;
     logic signed [0:STAGES] [15:0] y;
@@ -97,37 +97,31 @@ module cordic
     assign valid[0] = in_rd_en;
 
     // =========================================================================
-    // 16-stage pipelined CORDIC using GENERATE-FOR
-    // Each iteration: inline combinational logic + registered output
-    // (same structural pattern as mult_pipe.sv)
+    // 16-stage pipelined CORDIC — instantiate cordic_stage components
+    // using GENERATE-FOR with packed array wiring (mult_pipe.sv style)
+    //
+    // NOTE: cordic_stage ports are declared 'signed', so packed array slices
+    // (which lose signedness) are correctly interpreted inside each stage.
     // =========================================================================
     genvar k;
     generate
         for (k = 0; k < STAGES; k++) begin : pipe
-            logic signed [15:0] d;
-            logic signed [15:0] tx, ty, tz;
-
-            // Combinational CORDIC rotation for stage k
-            // NOTE: packed array slices lose signedness, so $signed() is required
-            assign d  = ($signed(z[k]) >= 16'sh0000) ? 16'sh0000 : 16'shFFFF;
-            assign tx = $signed(x[k]) - ((($signed(y[k]) >>> k) ^ d) - d);
-            assign ty = $signed(y[k]) + ((($signed(x[k]) >>> k) ^ d) - d);
-            assign tz = $signed(z[k]) - ((CORDIC_TABLE[k] ^ d) - d);
-
-            // Pipeline register for stage k
-            always_ff @(posedge clock or posedge reset) begin
-                if (reset) begin
-                    x[k+1]     <= 16'sh0000;
-                    y[k+1]     <= 16'sh0000;
-                    z[k+1]     <= 16'sh0000;
-                    valid[k+1] <= 1'b0;
-                end else if (pipeline_en) begin
-                    x[k+1]     <= tx;
-                    y[k+1]     <= ty;
-                    z[k+1]     <= tz;
-                    valid[k+1] <= valid[k];
-                end
-            end
+            cordic_stage #(
+                .K_IDX(k),
+                .C_VAL(CORDIC_TABLE[k])
+            ) stage_inst (
+                .clock    (clock),
+                .reset    (reset),
+                .enable   (pipeline_en),
+                .x_in     (x[k]),
+                .y_in     (y[k]),
+                .z_in     (z[k]),
+                .valid_in (valid[k]),
+                .x_out    (x[k+1]),
+                .y_out    (y[k+1]),
+                .z_out    (z[k+1]),
+                .valid_out(valid[k+1])
+            );
         end
     endgenerate
 

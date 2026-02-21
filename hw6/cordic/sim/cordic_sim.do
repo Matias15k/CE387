@@ -5,6 +5,7 @@ vmap work work
 
 # cordic architecture
 vlog -work work "../sv/fifo.sv"
+vlog -work work "../sv/cordic_stage.sv"
 vlog -work work "../sv/cordic.sv"
 vlog -work work "../sv/cordic_top.sv"
 
