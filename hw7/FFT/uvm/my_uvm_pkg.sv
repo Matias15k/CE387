@@ -8,6 +8,7 @@ import uvm_pkg::*;
 `include "my_uvm_sequence.sv"
 `include "my_uvm_monitor.sv"
 `include "my_uvm_driver.sv"
+`include "my_uvm_coverage.sv"
 `include "my_uvm_agent.sv"
 `include "my_uvm_scoreboard.sv"
 `include "my_uvm_config.sv"

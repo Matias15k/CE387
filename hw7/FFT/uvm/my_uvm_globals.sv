@@ -14,5 +14,7 @@ localparam string FFT_IN_REAL_NAME  = "fft_in_real.txt";
 localparam string FFT_IN_IMAG_NAME  = "fft_in_imag.txt";
 localparam string FFT_OUT_REAL_NAME = "fft_out_real.txt";
 localparam string FFT_OUT_IMAG_NAME = "fft_out_imag.txt";
+localparam string FFT_HW_OUT_REAL   = "fft_hw_out_real.txt";
+localparam string FFT_HW_OUT_IMAG   = "fft_hw_out_imag.txt";
 
 `endif

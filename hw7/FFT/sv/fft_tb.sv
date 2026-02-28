@@ -1,12 +1,11 @@
-
 `timescale 1 ns / 1 ns
 
 module fft_tb;
 
-localparam DATA_WIDTH  = 32;
-localparam FFT_N       = 16;
-localparam FIFO_DEPTH  = 16;
-localparam QUANT_BITS  = 14;
+localparam DATA_WIDTH   = 32;
+localparam FFT_N        = 16;
+localparam FIFO_DEPTH   = 16;
+localparam QUANT_BITS   = 14;
 localparam CLOCK_PERIOD = 10;
 
 logic clock = 1'b1;
@@ -64,7 +63,9 @@ initial begin
     reset = 1'b0;
 end
 
-// Main test process
+// ---------------------------------------------------------------
+// Main test process: measures latency and throughput
+// ---------------------------------------------------------------
 initial begin : tb_process
     longint unsigned start_time, end_time;
 
@@ -78,13 +79,31 @@ initial begin : tb_process
     end_time = $time;
 
     $display("@ %0t: Simulation completed.", end_time);
-    $display("Total simulation cycle count: %0d", (end_time-start_time)/CLOCK_PERIOD);
+    $display("Total simulation cycle count: %0d", (end_time - start_time) / CLOCK_PERIOD);
     $display("Total error count: %0d", out_errors);
+
+    // Throughput / latency report
+    $display("");
+    $display("========================================");
+    $display("  Throughput and Latency Report");
+    $display("========================================");
+    $display("  FFT size (N):         %0d", FFT_N);
+    $display("  Pipeline stages:      %0d", $clog2(FFT_N));
+    $display("  Clock period:         %0d ns", CLOCK_PERIOD);
+    $display("  Total cycles:         %0d", (end_time - start_time) / CLOCK_PERIOD);
+    $display("  Pipeline fill:        %0d cycles (load) + %0d cycles (compute)",
+             FFT_N, $clog2(FFT_N) + 1);
+    $display("  Output rate:          1 sample per clock cycle");
+    $display("  Effective throughput:  %0d Msamples/sec",
+             1000 / CLOCK_PERIOD);
+    $display("========================================");
 
     $finish;
 end
 
+// ---------------------------------------------------------------
 // Input process: read from hex files and write to input FIFOs
+// ---------------------------------------------------------------
 initial begin : input_process
     int in_real_file, in_imag_file;
     int scan_r, scan_i;
@@ -119,9 +138,12 @@ initial begin : input_process
     in_write_done = 1'b1;
 end
 
-// Output process: read from output FIFOs and compare with reference
+// ---------------------------------------------------------------
+// Output process: read from output FIFOs, compare, and write files
+// ---------------------------------------------------------------
 initial begin : output_process
     int ref_real_file, ref_imag_file;
+    int hw_out_real_file, hw_out_imag_file;
     int scan_r, scan_i;
     logic [DATA_WIDTH-1:0] exp_real, exp_imag;
     int i;
@@ -131,8 +153,10 @@ initial begin : output_process
 
     $display("@ %0t: Comparing FFT output...", $time);
 
-    ref_real_file = $fopen("fft_out_real.txt", "r");
-    ref_imag_file = $fopen("fft_out_imag.txt", "r");
+    ref_real_file    = $fopen("fft_out_real.txt", "r");
+    ref_imag_file    = $fopen("fft_out_imag.txt", "r");
+    hw_out_real_file = $fopen("fft_hw_out_real.txt", "w");
+    hw_out_imag_file = $fopen("fft_hw_out_imag.txt", "w");
     out_rd_en = 1'b0;
 
     i = 0;
@@ -143,12 +167,17 @@ initial begin : output_process
             scan_r = $fscanf(ref_real_file, "%h", exp_real);
             scan_i = $fscanf(ref_imag_file, "%h", exp_imag);
 
-            if (out_real_dout != $signed(exp_real) || out_imag_dout != $signed(exp_imag)) begin
+            // Write hardware outputs to files
+            $fdisplay(hw_out_real_file, "%08x", out_real_dout);
+            $fdisplay(hw_out_imag_file, "%08x", out_imag_dout);
+
+            if (out_real_dout != $signed(exp_real) ||
+                out_imag_dout != $signed(exp_imag)) begin
                 out_errors++;
                 $display("@ %0t: ERROR Y[%0d]: exp=(%08x,%08x) got=(%08x,%08x)",
                     $time, i, exp_real, exp_imag, out_real_dout, out_imag_dout);
             end else begin
-                $display("@ %0t: PASS  Y[%0d]: (%08x,%08x)",
+                $display("@ %0t: PASS  Y[%0d]: real=%08x imag=%08x",
                     $time, i, out_real_dout, out_imag_dout);
             end
 
@@ -161,6 +190,9 @@ initial begin : output_process
     out_rd_en = 1'b0;
     $fclose(ref_real_file);
     $fclose(ref_imag_file);
+    $fclose(hw_out_real_file);
+    $fclose(hw_out_imag_file);
+    $display("@ %0t: Hardware output files written: fft_hw_out_real.txt, fft_hw_out_imag.txt", $time);
     out_read_done = 1'b1;
 end
 

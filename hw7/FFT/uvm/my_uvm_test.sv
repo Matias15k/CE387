@@ -1,4 +1,3 @@
-
 import uvm_pkg::*;
 
 class my_uvm_test extends uvm_test;

@@ -1,4 +1,3 @@
-
 import uvm_pkg::*;
 import my_uvm_package::*;
 
@@ -31,7 +30,7 @@ module my_uvm_tb;
     );
 
     initial begin
-        // store the vif so it can be retrieved by the driver & monitor
+        // store the vif so it can be retrieved by driver & monitors
         uvm_resource_db#(virtual my_uvm_if)::set
             (.scope("ifs"), .name("vif"), .val(vif));
 
@@ -49,7 +48,7 @@ module my_uvm_tb;
         vif.reset <= 1'b0;
     end
 
-    // 10ns clock (100 MHz)
+    // 10 ns clock (100 MHz)
     always
         #(CLOCK_PERIOD/2) vif.clock = ~vif.clock;
 

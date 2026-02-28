@@ -1,24 +1,27 @@
 import uvm_pkg::*;
 
 // -----------------------------------------------------------
-// Transaction: carries one complex sample (real + imaginary)
+// Transaction: one complex FFT sample (real + imaginary)
+// plus a sample index for coverage tracking
 // -----------------------------------------------------------
 class my_uvm_transaction extends uvm_sequence_item;
     logic signed [DATA_WIDTH-1:0] data_real;
     logic signed [DATA_WIDTH-1:0] data_imag;
+    int                           sample_index;
 
     function new(string name = "");
         super.new(name);
     endfunction: new
 
     `uvm_object_utils_begin(my_uvm_transaction)
-        `uvm_field_int(data_real, UVM_ALL_ON)
-        `uvm_field_int(data_imag, UVM_ALL_ON)
+        `uvm_field_int(data_real,     UVM_ALL_ON)
+        `uvm_field_int(data_imag,     UVM_ALL_ON)
+        `uvm_field_int(sample_index,  UVM_ALL_ON)
     `uvm_object_utils_end
 endclass: my_uvm_transaction
 
 // -----------------------------------------------------------
-// Sequence: reads FFT input vectors from hex text files
+// Sequence: reads N complex input samples from hex text files
 // -----------------------------------------------------------
 class my_uvm_sequence extends uvm_sequence#(my_uvm_transaction);
     `uvm_object_utils(my_uvm_sequence)
@@ -40,12 +43,10 @@ class my_uvm_sequence extends uvm_sequence#(my_uvm_transaction);
         in_real_file = $fopen(FFT_IN_REAL_NAME, "r");
         in_imag_file = $fopen(FFT_IN_IMAG_NAME, "r");
 
-        if (!in_real_file) begin
+        if (!in_real_file)
             `uvm_fatal("SEQ_RUN", $sformatf("Failed to open file %s", FFT_IN_REAL_NAME));
-        end
-        if (!in_imag_file) begin
+        if (!in_imag_file)
             `uvm_fatal("SEQ_RUN", $sformatf("Failed to open file %s", FFT_IN_IMAG_NAME));
-        end
 
         i = 0;
         while (i < FFT_N) begin
@@ -56,8 +57,9 @@ class my_uvm_sequence extends uvm_sequence#(my_uvm_transaction);
             scan_r = $fscanf(in_real_file, "%h", val_real);
             scan_i = $fscanf(in_imag_file, "%h", val_imag);
 
-            tx.data_real = $signed(val_real);
-            tx.data_imag = $signed(val_imag);
+            tx.data_real     = $signed(val_real);
+            tx.data_imag     = $signed(val_imag);
+            tx.sample_index  = i;
 
             `uvm_info("SEQ_RUN", $sformatf("Input[%0d]: real=%08x imag=%08x",
                       i, tx.data_real, tx.data_imag), UVM_MEDIUM);
@@ -66,7 +68,7 @@ class my_uvm_sequence extends uvm_sequence#(my_uvm_transaction);
             i++;
         end
 
-        `uvm_info("SEQ_RUN", $sformatf("Closing input files..."), UVM_LOW);
+        `uvm_info("SEQ_RUN", "Closing input files...", UVM_LOW);
         $fclose(in_real_file);
         $fclose(in_imag_file);
     endtask: body
