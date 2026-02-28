@@ -63,9 +63,6 @@ initial begin
     reset = 1'b0;
 end
 
-// ---------------------------------------------------------------
-// Main test process: measures latency and throughput
-// ---------------------------------------------------------------
 initial begin : tb_process
     longint unsigned start_time, end_time;
 

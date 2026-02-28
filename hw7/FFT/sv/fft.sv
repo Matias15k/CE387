@@ -17,22 +17,9 @@ module fft #(
     output logic signed [DATA_WIDTH-1:0]  out_imag_din
 );
 
-    // ----------------------------------------------------------------
-    // Local parameters
-    // ----------------------------------------------------------------
     localparam NUM_STAGES = $clog2(FFT_N);          // 4 for N=16
     localparam CNT_W      = $clog2(FFT_N) + 1;     // counter width
 
-    // ----------------------------------------------------------------
-    // Twiddle factor ROM (precomputed, quantized)
-    //
-    // For stage s, butterfly index j within a group:
-    //   angle = -PI * j / (step/2)   where step = 2^(s+1)
-    //   tw_real = quantize(cos(angle)) = (int)(cos(angle) * 2^QUANT_BITS)
-    //   tw_imag = quantize(sin(angle))
-    //
-    // N = 16 twiddle table (QUANT_BITS = 14, QUANT_VAL = 16384):
-    // ----------------------------------------------------------------
     localparam signed [DATA_WIDTH-1:0] TW_REAL [0:NUM_STAGES-1][0:FFT_N/2-1] = '{
         '{  32'sd16384,  32'sd0,      32'sd0,      32'sd0,       32'sd0,  32'sd0,       32'sd0,       32'sd0      },
         '{  32'sd16384,  32'sd0,      32'sd0,      32'sd0,       32'sd0,  32'sd0,       32'sd0,       32'sd0      },
@@ -47,28 +34,15 @@ module fft #(
         '{  32'sd0,      -32'sd6269,   -32'sd11585,  -32'sd15136, -32'sd16384,  -32'sd15136,  -32'sd11585, -32'sd6269   }
     };
 
-    // ----------------------------------------------------------------
-    // FSM (2-process: sequential + combinational)
-    // ----------------------------------------------------------------
     typedef enum logic [1:0] {IDLE, LOAD, COMPUTE, OUTPUT} state_t;
     state_t state, state_c;
 
     logic [CNT_W-1:0] count, count_c;
     logic [CNT_W-1:0] stage_cnt, stage_cnt_c;
 
-    // ----------------------------------------------------------------
-    // Input sample buffer
-    // ----------------------------------------------------------------
     logic signed [DATA_WIDTH-1:0] in_buf_real [0:FFT_N-1];
     logic signed [DATA_WIDTH-1:0] in_buf_imag [0:FFT_N-1];
 
-    // ----------------------------------------------------------------
-    // Bit-reversal module: reorder inputs before FFT stages
-    //
-    //   Implemented as a generate-for block. The bit_reverse function
-    //   computes permuted indices at elaboration time. The result is
-    //   purely combinational wiring from in_buf to br_real/br_imag.
-    // ----------------------------------------------------------------
     function automatic integer bit_reverse(input integer idx, input integer nbits);
         integer result, b;
         result = 0;
@@ -91,21 +65,9 @@ module fft #(
         end
     endgenerate
 
-    // ----------------------------------------------------------------
-    // Pipeline stage registers
-    //   stage_real[s][k], stage_imag[s][k]
-    //   s = 0..NUM_STAGES-1 (registered output of each butterfly stage)
-    // ----------------------------------------------------------------
     logic signed [DATA_WIDTH-1:0] stage_real [0:NUM_STAGES-1][0:FFT_N-1];
     logic signed [DATA_WIDTH-1:0] stage_imag [0:NUM_STAGES-1][0:FFT_N-1];
 
-    // ----------------------------------------------------------------
-    // Generate butterfly pipeline stages
-    //   Each stage: N/2 butterfly units computing in parallel
-    //   Stage s reads from stage[s-1] (or bit-reversed input for s==0)
-    //   Stage s writes to stage[s] (registered on posedge clock)
-    //   Each stage computes a butterfly per clock cycle.
-    // ----------------------------------------------------------------
     genvar gs, gb;
     generate
         for (gs = 0; gs < NUM_STAGES; gs++) begin : gen_stage
@@ -164,9 +126,6 @@ module fft #(
         end : gen_stage
     endgenerate
 
-    // ----------------------------------------------------------------
-    // Sequential process (state register + input buffer)
-    // ----------------------------------------------------------------
     always_ff @(posedge clock or posedge reset) begin
         if (reset) begin
             state     <= IDLE;
@@ -187,9 +146,6 @@ module fft #(
         end
     end
 
-    // ----------------------------------------------------------------
-    // Combinational process (next-state + output logic)
-    // ----------------------------------------------------------------
     always_comb begin
         // Defaults
         state_c     = state;
@@ -201,7 +157,7 @@ module fft #(
         out_imag_din = '0;
 
         case (state)
-            // -------------------------------------------
+
             IDLE: begin
                 count_c     = '0;
                 stage_cnt_c = '0;
@@ -210,9 +166,6 @@ module fft #(
                 end
             end
 
-            // -------------------------------------------
-            // Load N samples from input FIFOs
-            // -------------------------------------------
             LOAD: begin
                 if (in_empty == 1'b0) begin
                     in_rd_en = 1'b1;
@@ -226,11 +179,6 @@ module fft #(
                 end
             end
 
-            // -------------------------------------------
-            // Wait for pipeline stages to propagate
-            // Need NUM_STAGES clock edges for data to
-            // flow through all butterfly pipeline stages.
-            // -------------------------------------------
             COMPUTE: begin
                 stage_cnt_c = stage_cnt + 1;
                 if (stage_cnt == CNT_W'(NUM_STAGES)) begin
@@ -239,10 +187,6 @@ module fft #(
                 end
             end
 
-            // -------------------------------------------
-            // Output N results to output FIFOs
-            // (1 sample per clock cycle)
-            // -------------------------------------------
             OUTPUT: begin
                 if (out_full == 1'b0) begin
                     out_wr_en    = 1'b1;
@@ -257,7 +201,6 @@ module fft #(
                 end
             end
 
-            // -------------------------------------------
             default: begin
                 state_c     = IDLE;
                 count_c     = '0;

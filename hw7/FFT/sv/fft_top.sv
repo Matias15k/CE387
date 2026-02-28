@@ -40,9 +40,6 @@ module fft_top #(
     assign in_empty_combined = fifo_in_real_empty | fifo_in_imag_empty;
     assign out_full_combined = fifo_out_real_full  | fifo_out_imag_full;
 
-    // ----------------------------------------------------------------
-    // FFT core
-    // ----------------------------------------------------------------
     fft #(
         .DATA_WIDTH(DATA_WIDTH),
         .FFT_N(FFT_N),
@@ -60,9 +57,6 @@ module fft_top #(
         .out_imag_din(fft_out_imag_din)
     );
 
-    // ----------------------------------------------------------------
-    // Input FIFO - Real
-    // ----------------------------------------------------------------
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(DATA_WIDTH)
@@ -78,9 +72,6 @@ module fft_top #(
         .empty(fifo_in_real_empty)
     );
 
-    // ----------------------------------------------------------------
-    // Input FIFO - Imaginary
-    // ----------------------------------------------------------------
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(DATA_WIDTH)
@@ -96,9 +87,6 @@ module fft_top #(
         .empty(fifo_in_imag_empty)
     );
 
-    // ----------------------------------------------------------------
-    // Output FIFO - Real
-    // ----------------------------------------------------------------
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(DATA_WIDTH)
@@ -114,9 +102,6 @@ module fft_top #(
         .empty(out_real_empty)
     );
 
-    // ----------------------------------------------------------------
-    // Output FIFO - Imaginary
-    // ----------------------------------------------------------------
     fifo #(
         .FIFO_BUFFER_SIZE(FIFO_DEPTH),
         .FIFO_DATA_WIDTH(DATA_WIDTH)

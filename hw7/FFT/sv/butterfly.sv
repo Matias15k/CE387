@@ -14,22 +14,8 @@ module butterfly #(
     output logic signed [DATA_WIDTH-1:0] y2_imag
 );
 
-    // ----------------------------------------------------------------
-    // Fixed-point dequantization using arithmetic shift (synthesizable)
-    //
-    // C reference:  DEQUANTIZE_I(i) = (i + QUANT_VAL/2) / QUANT_VAL
-    //   where '/' is C signed integer division (truncates toward zero)
-    //
-    // For synthesis: replace '/' with '>>>' (arithmetic right shift)
-    //   but '>>>' floors for negative numbers while C truncates toward 0.
-    //   Correction: if sum < 0, add (QUANT_VAL - 1) before shifting.
-    // ----------------------------------------------------------------
     localparam signed [2*DATA_WIDTH-1:0] HALF_Q    = 1 <<< (QUANT_BITS - 1);
     localparam signed [2*DATA_WIDTH-1:0] Q_MINUS_1 = (1 <<< QUANT_BITS) - 1;
-
-    // Complex twiddle multiplication: W * X2
-    // v_real = dequant(w_real*x2_real) - dequant(w_imag*x2_imag)
-    // v_imag = dequant(w_real*x2_imag) + dequant(w_imag*x2_real)
 
     logic signed [2*DATA_WIDTH-1:0] prod_rr, prod_ii, prod_ri, prod_ir;
     logic signed [2*DATA_WIDTH-1:0] sum_rr,  sum_ii,  sum_ri,  sum_ir;
@@ -48,9 +34,6 @@ module butterfly #(
     assign sum_ri = prod_ri + HALF_Q;
     assign sum_ir = prod_ir + HALF_Q;
 
-    // Truncate-toward-zero division by QUANT_VAL using arithmetic shift
-    // For negative values: add (QUANT_VAL - 1) before shifting to get
-    //   truncation-toward-zero semantics matching C integer division
     assign dq_rr = (sum_rr >= 0) ? DATA_WIDTH'(sum_rr >>> QUANT_BITS)
                                  : DATA_WIDTH'((sum_rr + Q_MINUS_1) >>> QUANT_BITS);
     assign dq_ii = (sum_ii >= 0) ? DATA_WIDTH'(sum_ii >>> QUANT_BITS)
