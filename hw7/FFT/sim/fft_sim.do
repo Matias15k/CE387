@@ -3,12 +3,11 @@ setenv LMC_TIMEUNIT -9
 vlib work
 vmap work work
 
-# FFT RTL architecture
-vlog -work work "../sv/fifo.sv"
-vlog -work work "../sv/butterfly.sv"
-vlog -work work "../sv/bit_reversal.sv"
-vlog -work work "../sv/fft.sv"
-vlog -work work "../sv/fft_top.sv"
+# FFT RTL architecture (compile with coverage enabled)
+vlog -work work +cover "../sv/fifo.sv"
+vlog -work work +cover "../sv/butterfly.sv"
+vlog -work work +cover "../sv/fft.sv"
+vlog -work work +cover "../sv/fft_top.sv"
 
 # uvm library
 vlog -work work +incdir+$env(UVM_HOME)/src $env(UVM_HOME)/src/uvm.sv

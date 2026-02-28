@@ -63,20 +63,33 @@ module fft #(
     logic signed [DATA_WIDTH-1:0] in_buf_imag [0:FFT_N-1];
 
     // ----------------------------------------------------------------
-    // Bit-reversed output (combinational, feeds pipeline stage 0)
+    // Bit-reversal module: reorder inputs before FFT stages
+    //
+    //   Implemented as a generate-for block. The bit_reverse function
+    //   computes permuted indices at elaboration time. The result is
+    //   purely combinational wiring from in_buf to br_real/br_imag.
     // ----------------------------------------------------------------
+    function automatic integer bit_reverse(input integer idx, input integer nbits);
+        integer result, b;
+        result = 0;
+        for (b = 0; b < nbits; b++) begin
+            if (idx & (1 << b))
+                result = result | (1 << (nbits - 1 - b));
+        end
+        return result;
+    endfunction
+
     logic signed [DATA_WIDTH-1:0] br_real [0:FFT_N-1];
     logic signed [DATA_WIDTH-1:0] br_imag [0:FFT_N-1];
 
-    bit_reversal #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .FFT_N(FFT_N)
-    ) bit_rev_inst (
-        .in_real(in_buf_real),
-        .in_imag(in_buf_imag),
-        .out_real(br_real),
-        .out_imag(br_imag)
-    );
+    genvar gi;
+    generate
+        for (gi = 0; gi < FFT_N; gi++) begin : gen_bitrev
+            localparam integer BR_IDX = bit_reverse(gi, NUM_STAGES);
+            assign br_real[BR_IDX] = in_buf_real[gi];
+            assign br_imag[BR_IDX] = in_buf_imag[gi];
+        end
+    endgenerate
 
     // ----------------------------------------------------------------
     // Pipeline stage registers
@@ -89,8 +102,9 @@ module fft #(
     // ----------------------------------------------------------------
     // Generate butterfly pipeline stages
     //   Each stage: N/2 butterfly units computing in parallel
-    //   Stage s reads from stage_real[s-1] (or br_real for s==0)
-    //   Stage s writes to stage_real[s] (registered)
+    //   Stage s reads from stage[s-1] (or bit-reversed input for s==0)
+    //   Stage s writes to stage[s] (registered on posedge clock)
+    //   Each stage computes a butterfly per clock cycle.
     // ----------------------------------------------------------------
     genvar gs, gb;
     generate
@@ -131,9 +145,9 @@ module fft #(
                     .DATA_WIDTH(DATA_WIDTH),
                     .QUANT_BITS(QUANT_BITS)
                 ) bfly_inst (
-                    .x1_real(src1_r),  .x1_imag(src1_i),
-                    .x2_real(src2_r),  .x2_imag(src2_i),
-                    .w_real(W_R),      .w_imag(W_I),
+                    .x1_real(src1_r),    .x1_imag(src1_i),
+                    .x2_real(src2_r),    .x2_imag(src2_i),
+                    .w_real(W_R),        .w_imag(W_I),
                     .y1_real(bfly_y1_r), .y1_imag(bfly_y1_i),
                     .y2_real(bfly_y2_r), .y2_imag(bfly_y2_i)
                 );

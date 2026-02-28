@@ -4,7 +4,6 @@
 #project files
 add_file -verilog -vlog_std sysv "../sv/fifo.sv"
 add_file -verilog -vlog_std sysv "../sv/butterfly.sv"
-add_file -verilog -vlog_std sysv "../sv/bit_reversal.sv"
 add_file -verilog -vlog_std sysv "../sv/fft.sv"
 add_file -verilog -vlog_std sysv "../sv/fft_top.sv"
 

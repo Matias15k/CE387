@@ -5,9 +5,6 @@ add wave -noupdate -group my_uvm_tb/fft_top_inst -radix hexadecimal /my_uvm_tb/f
 add wave -noupdate -group my_uvm_tb/fft_top_inst/fft_inst
 add wave -noupdate -group my_uvm_tb/fft_top_inst/fft_inst -radix hexadecimal /my_uvm_tb/fft_top_inst/fft_inst/*
 
-add wave -noupdate -group my_uvm_tb/fft_top_inst/fft_inst/bit_rev_inst
-add wave -noupdate -group my_uvm_tb/fft_top_inst/fft_inst/bit_rev_inst -radix hexadecimal /my_uvm_tb/fft_top_inst/fft_inst/bit_rev_inst/*
-
 add wave -noupdate -group my_uvm_tb/fft_top_inst/fifo_in_real
 add wave -noupdate -group my_uvm_tb/fft_top_inst/fifo_in_real -radix hexadecimal /my_uvm_tb/fft_top_inst/fifo_in_real/*
 
