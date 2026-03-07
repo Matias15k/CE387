@@ -3,7 +3,7 @@ module layer #(
     parameter NUM_INPUTS   = 784,
     parameter NUM_OUTPUTS  = 10,
     parameter BITS         = 14,
-    parameter WEIGHT_FILE  = "layer_0_weights_biases.txt"
+    parameter string WEIGHT_FILE  = "layer_0_weights_biases.txt"
 )(
     input  logic                          clock,
     input  logic                          reset,

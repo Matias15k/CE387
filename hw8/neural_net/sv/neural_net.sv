@@ -4,8 +4,8 @@ module neural_net #(
     parameter NUM_L0_OUT   = 10,
     parameter NUM_L1_OUT   = 10,
     parameter BITS         = 14,
-    parameter WEIGHT_FILE0 = "layer_0_weights_biases.txt",
-    parameter WEIGHT_FILE1 = "layer_1_weights_biases.txt"
+    parameter string WEIGHT_FILE0 = "layer_0_weights_biases.txt",
+    parameter string WEIGHT_FILE1 = "layer_1_weights_biases.txt"
 )(
     input  logic                          clock,
     input  logic                          reset,
