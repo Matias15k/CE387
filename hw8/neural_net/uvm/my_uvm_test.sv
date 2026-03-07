@@ -1,9 +1,8 @@
+
 import uvm_pkg::*;
 
-// =============================================================================
-// Test: creates environment, launches sequence, controls simulation end.
-// =============================================================================
 class my_uvm_test extends uvm_test;
+
     `uvm_component_utils(my_uvm_test)
 
     my_uvm_env env;
@@ -24,13 +23,13 @@ class my_uvm_test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         my_uvm_sequence seq;
 
-        // Raise objection: keeps simulation alive until sequence completes
+        // Raise objection to keep simulation running
         phase.raise_objection(.obj(this));
 
         seq = my_uvm_sequence::type_id::create(.name("seq"), .contxt(get_full_name()));
         seq.start(env.agent.seqr);
 
-        // Drop objection: simulation will end after all drain times
+        // Drop objection after sequence completes
         phase.drop_objection(.obj(this));
     endtask: run_phase
 

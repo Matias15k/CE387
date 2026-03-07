@@ -1,46 +1,53 @@
-#--  Synopsys Synplify Pro project file
-#--  Neural Network Hardware Accelerator
+#--  Synopsys, Inc.
+#--  Version O-2018.09-SP1
 
-# Project files
-add_file -verilog -vlog_std sysv "../sv/fifo.sv"
-add_file -verilog -vlog_std sysv "../sv/neuron.sv"
-add_file -verilog -vlog_std sysv "../sv/layer.sv"
-add_file -verilog -vlog_std sysv "../sv/argmax.sv"
-add_file -verilog -vlog_std sysv "../sv/neural_net.sv"
+#project files
 add_file -verilog -vlog_std sysv "../sv/neural_net_top.sv"
+add_file -verilog -vlog_std sysv "../sv/neural_net.sv"
+add_file -verilog -vlog_std sysv "../sv/layer.sv"
+add_file -verilog -vlog_std sysv "../sv/neuron.sv"
+add_file -verilog -vlog_std sysv "../sv/argmax.sv"
+add_file -verilog -vlog_std sysv "../sv/fifo.sv"
 
-# Implementation: rev_1
+
+#implementation: "rev_1"
 impl -add rev_1 -type fpga
 
-# Implementation attributes
+#
+#implementation attributes
+
 set_option -vlog_std sysv
 set_option -project_relative_includes 1
 
-# PAR job
+#par_1 attributes
 set_option -job par_1 -add par
 
-# Device options (Altera Cyclone IV E — same family as grayscale reference)
+#device options
 set_option -technology CYCLONEIV-E
 set_option -part EP4CE115
 set_option -package FC23
 set_option -speed_grade -7
 set_option -part_companion ""
 
-# Compilation/mapping
+#compilation/mapping options
 set_option -use_fsm_explorer 0
 set_option -top_module "neural_net_top"
 
-# HDL compiler options
+# hdl_compiler_options
 set_option -distributed_compile 1
 
-# Altera options
+# altera_options
 set_option -rw_check_on_ram 1
 
-# Mapper options
+# mapper_without_write_options
+set_option -frequency auto
+set_option -srs_instrumentation 1
+
+# mapper_options
 set_option -write_verilog 0
 set_option -write_vhdl 0
 
-# Intel Stratix / Cyclone options
+# Intel STRATIX
 set_option -run_prop_extract 1
 set_option -maxfan 30
 set_option -disable_io_insertion 0
@@ -50,20 +57,22 @@ set_option -retiming 0
 set_option -no_sequential_opt 0
 set_option -fix_gated_and_generated_clocks 1
 
-# Sequential optimization
+# sequential_optimization_options
 set_option -symbolic_fsm_compiler 1
 
-# Compiler options
+# Compiler Options
 set_option -compiler_compatible 0
 set_option -resource_sharing 1
 set_option -multi_file_compilation_unit 1
+
+# Compiler Options
 set_option -auto_infer_blackbox 0
 
-# APR constraint generation
+#automatic place and route (vendor) options
 set_option -write_apr_constraint 1
 
-# Result format
+#set result format/file last
 project -result_file "rev_1/neural_net_top.vqm"
 
-# Activate implementation
+#design plan options
 impl -active "rev_1"

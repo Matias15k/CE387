@@ -1,10 +1,7 @@
 import uvm_pkg::*;
 
-// =============================================================================
-// Driver: pulls transactions from the sequencer and writes pixels into the
-// DUT input FIFO, respecting the in_full backpressure signal.
-// =============================================================================
-class my_uvm_driver extends uvm_driver #(my_uvm_transaction);
+class my_uvm_driver extends uvm_driver#(my_uvm_transaction);
+
     `uvm_component_utils(my_uvm_driver)
 
     virtual my_uvm_if vif;
@@ -15,8 +12,8 @@ class my_uvm_driver extends uvm_driver #(my_uvm_transaction);
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        void'(uvm_resource_db #(virtual my_uvm_if)::read_by_name
-                  (.scope("ifs"), .name("vif"), .val(vif)));
+        void'(uvm_resource_db#(virtual my_uvm_if)::read_by_name
+            (.scope("ifs"), .name("vif"), .val(vif)));
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
@@ -26,7 +23,7 @@ class my_uvm_driver extends uvm_driver #(my_uvm_transaction);
     virtual task drive();
         my_uvm_transaction tx;
 
-        // Wait for reset to deassert
+        // Wait for reset
         @(posedge vif.reset)
         @(negedge vif.reset)
 
@@ -49,4 +46,4 @@ class my_uvm_driver extends uvm_driver #(my_uvm_transaction);
         end
     endtask: drive
 
-endclass: my_uvm_driver
+endclass

@@ -1,10 +1,13 @@
 import uvm_pkg::*;
 
+
 class my_uvm_agent extends uvm_agent;
+
     `uvm_component_utils(my_uvm_agent)
 
-    uvm_analysis_port #(my_uvm_transaction) agent_ap_output;
-    uvm_analysis_port #(my_uvm_transaction) agent_ap_compare;
+    uvm_analysis_port#(my_uvm_transaction) agent_ap_output;
+    uvm_analysis_port#(my_uvm_transaction) agent_ap_compare;
+    uvm_analysis_port#(my_uvm_transaction) agent_ap_input;
 
     my_uvm_sequencer         seqr;
     my_uvm_driver            drvr;
@@ -17,11 +20,12 @@ class my_uvm_agent extends uvm_agent;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        agent_ap_output  = new(.name("agent_ap_output"),  .parent(this));
+        agent_ap_output  = new(.name("agent_ap_output"), .parent(this));
         agent_ap_compare = new(.name("agent_ap_compare"), .parent(this));
+        agent_ap_input   = new(.name("agent_ap_input"), .parent(this));
 
-        seqr    = my_uvm_sequencer::type_id::create(.name("seqr"),    .parent(this));
-        drvr    = my_uvm_driver::type_id::create(.name("drvr"),       .parent(this));
+        seqr    = my_uvm_sequencer::type_id::create(.name("seqr"), .parent(this));
+        drvr    = my_uvm_driver::type_id::create(.name("drvr"), .parent(this));
         mon_out = my_uvm_monitor_output::type_id::create(.name("mon_out"), .parent(this));
         mon_cmp = my_uvm_monitor_compare::type_id::create(.name("mon_cmp"), .parent(this));
     endfunction: build_phase
