@@ -9,24 +9,18 @@ module neural_net #(
 )(
     input  logic                          clock,
     input  logic                          reset,
-    // Input FIFO read interface (FIFO pushes data to us)
     output logic                          in_rd_en,
     input  logic                          in_empty,
     input  logic signed [DATA_WIDTH-1:0]  in_dout,
-    // Output FIFO write interface
     output logic                          out_wr_en,
     input  logic                          out_full,
     output logic [3:0]                    out_din,
-    // Layer outputs exposed for UVM coverage / monitoring
     output logic signed [DATA_WIDTH-1:0]  layer0_out [NUM_L0_OUT],
     output logic signed [DATA_WIDTH-1:0]  layer1_out [NUM_L1_OUT],
     output logic [3:0]                    predicted_digit,
     output logic                          inference_done
 );
 
-    // -------------------------------------------------------
-    // FSM state definitions
-    // -------------------------------------------------------
     typedef enum logic [3:0] {
         S_IDLE,
         S_L0_START,
@@ -42,44 +36,26 @@ module neural_net #(
 
     state_t state, state_c;
 
-    // -------------------------------------------------------
-    // Counters
-    // -------------------------------------------------------
     localparam INPUT_CNT_W = $clog2(NUM_INPUTS);
     localparam L1_CNT_W    = $clog2(NUM_L0_OUT);
 
     logic [INPUT_CNT_W-1:0] input_count, input_count_c;
     logic [L1_CNT_W-1:0]    l1_idx, l1_idx_c;
-
-    // -------------------------------------------------------
-    // Layer 0 signals
-    // -------------------------------------------------------
     logic                          l0_start;
     logic                          l0_data_valid;
     logic signed [DATA_WIDTH-1:0]  l0_data_in;
     logic signed [DATA_WIDTH-1:0]  l0_results [NUM_L0_OUT];
     logic                          l0_done;
-
-    // -------------------------------------------------------
-    // Layer 1 signals
-    // -------------------------------------------------------
     logic                          l1_start;
     logic                          l1_data_valid;
     logic signed [DATA_WIDTH-1:0]  l1_data_in;
     logic signed [DATA_WIDTH-1:0]  l1_results [NUM_L1_OUT];
     logic                          l1_done;
-
-    // -------------------------------------------------------
-    // Argmax signals
-    // -------------------------------------------------------
     logic [$clog2(NUM_L1_OUT)-1:0] argmax_idx;
     logic signed [DATA_WIDTH-1:0]  argmax_val;
     logic [3:0]                    digit_reg, digit_c;
     logic                          inf_done_reg, inf_done_c;
 
-    // -------------------------------------------------------
-    // Layer 0 instance
-    // -------------------------------------------------------
     layer #(
         .DATA_WIDTH  (DATA_WIDTH),
         .NUM_INPUTS  (NUM_INPUTS),
@@ -95,10 +71,7 @@ module neural_net #(
         .results    (l0_results),
         .done       (l0_done)
     );
-
-    // -------------------------------------------------------
-    // Layer 1 instance
-    // -------------------------------------------------------
+    
     layer #(
         .DATA_WIDTH  (DATA_WIDTH),
         .NUM_INPUTS  (NUM_L0_OUT),
@@ -115,9 +88,6 @@ module neural_net #(
         .done       (l1_done)
     );
 
-    // -------------------------------------------------------
-    // Argmax instance (combinational)
-    // -------------------------------------------------------
     argmax #(
         .DATA_WIDTH (DATA_WIDTH),
         .NUM_INPUTS (NUM_L1_OUT)
@@ -127,17 +97,12 @@ module neural_net #(
         .max_val (argmax_val)
     );
 
-    // -------------------------------------------------------
-    // Expose layer outputs for UVM
-    // -------------------------------------------------------
+
     assign layer0_out      = l0_results;
     assign layer1_out      = l1_results;
     assign predicted_digit = digit_reg;
     assign inference_done  = inf_done_reg;
 
-    // -------------------------------------------------------
-    // Process 1: Sequential – state & data registers
-    // -------------------------------------------------------
     always_ff @(posedge clock or posedge reset) begin
         if (reset) begin
             state       <= S_IDLE;
@@ -154,9 +119,6 @@ module neural_net #(
         end
     end
 
-    // -------------------------------------------------------
-    // Process 2: Combinational – next-state & output logic
-    // -------------------------------------------------------
     always_comb begin
         // Defaults
         state_c       = state;
@@ -178,7 +140,7 @@ module neural_net #(
         l1_data_in    = '0;
 
         case (state)
-            // --------------------------------------------------
+
             S_IDLE: begin
                 inf_done_c = 1'b0;
                 if (in_empty == 1'b0) begin
@@ -187,13 +149,11 @@ module neural_net #(
                 end
             end
 
-            // --------------------------------------------------
             S_L0_START: begin
                 l0_start = 1'b1;  // resets all layer-0 neurons to biases
                 state_c  = S_L0_FEED;
             end
 
-            // --------------------------------------------------
             S_L0_FEED: begin
                 if (in_empty == 1'b0) begin
                     l0_data_valid = 1'b1;
@@ -208,20 +168,16 @@ module neural_net #(
                 end
             end
 
-            // --------------------------------------------------
-            // Wait one cycle for last MAC result to register
             S_L0_WAIT: begin
                 state_c  = S_L1_START;
                 l1_idx_c = '0;
             end
 
-            // --------------------------------------------------
             S_L1_START: begin
                 l1_start = 1'b1;  // resets all layer-1 neurons to biases
                 state_c  = S_L1_FEED;
             end
 
-            // --------------------------------------------------
             S_L1_FEED: begin
                 l1_data_valid = 1'b1;
                 l1_data_in    = l0_results[l1_idx];
@@ -233,19 +189,15 @@ module neural_net #(
                 end
             end
 
-            // --------------------------------------------------
-            // Wait one cycle for last MAC result to register
             S_L1_WAIT: begin
                 state_c = S_ARGMAX;
             end
 
-            // --------------------------------------------------
             S_ARGMAX: begin
                 digit_c = argmax_idx[3:0];
                 state_c = S_OUTPUT;
             end
 
-            // --------------------------------------------------
             S_OUTPUT: begin
                 if (out_full == 1'b0) begin
                     out_wr_en  = 1'b1;
@@ -255,13 +207,11 @@ module neural_net #(
                 end
             end
 
-            // --------------------------------------------------
             S_DONE: begin
                 // Stay here after inference (or go back to IDLE for multiple inferences)
                 state_c = S_IDLE;
             end
 
-            // --------------------------------------------------
             default: begin
                 state_c = S_IDLE;
             end

@@ -14,10 +14,6 @@ module layer #(
     output logic                          done
 );
 
-    // -----------------------------------------------------------
-    // Weight & bias storage – loaded once from hex file
-    // File layout: NUM_INPUTS*NUM_OUTPUTS weights, then NUM_OUTPUTS biases
-    // -----------------------------------------------------------
     localparam MEM_DEPTH = NUM_INPUTS * NUM_OUTPUTS + NUM_OUTPUTS;
 
     logic signed [DATA_WIDTH-1:0] mem [0:MEM_DEPTH-1];
@@ -26,9 +22,7 @@ module layer #(
         $readmemh(WEIGHT_FILE, mem);
     end
 
-    // -----------------------------------------------------------
-    // Input counter – tracks which input sample we are on
-    // -----------------------------------------------------------
+
     localparam IDX_WIDTH = (NUM_INPUTS > 1) ? $clog2(NUM_INPUTS) : 1;
 
     logic [IDX_WIDTH-1:0] idx, idx_c;
@@ -68,10 +62,6 @@ module layer #(
 
     assign done = done_r;
 
-    // -----------------------------------------------------------
-    // Neuron instances (generate block)
-    // Each neuron gets the broadcast data_in and its own weight
-    // -----------------------------------------------------------
     logic signed [DATA_WIDTH-1:0] neuron_raw [NUM_OUTPUTS];
 
     genvar j;
@@ -102,9 +92,6 @@ module layer #(
         end
     endgenerate
 
-    // -----------------------------------------------------------
-    // Output: dequantize (>>> BITS) then ReLU
-    // -----------------------------------------------------------
     generate
         for (j = 0; j < NUM_OUTPUTS; j++) begin : relu_gen
             logic signed [DATA_WIDTH-1:0] shifted;

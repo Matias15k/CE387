@@ -12,16 +12,11 @@ module neuron #(
     output logic signed [DATA_WIDTH-1:0]  result
 );
 
-    // Accumulator register and next-state
     logic signed [DATA_WIDTH-1:0] acc, acc_c;
-
-    // 64-bit multiplication result for full precision
     logic signed [2*DATA_WIDTH-1:0] mult_result;
 
-    // Combinational multiply
     assign mult_result = data_in * weight_in;
 
-    // Sequential: accumulator register
     always_ff @(posedge clock or posedge reset) begin
         if (reset)
             acc <= '0;
@@ -29,7 +24,6 @@ module neuron #(
             acc <= acc_c;
     end
 
-    // Combinational: next accumulator value
     always_comb begin
         acc_c = acc;
         if (start)
@@ -38,7 +32,6 @@ module neuron #(
             acc_c = acc + DATA_WIDTH'(mult_result >>> BITS);
     end
 
-    // Output: raw accumulator (shift + ReLU applied externally by layer)
     assign result = acc;
 
 endmodule

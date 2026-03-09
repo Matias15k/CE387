@@ -10,34 +10,26 @@ module neural_net_top #(
 )(
     input  logic                          clock,
     input  logic                          reset,
-    // External input FIFO write interface
     output logic                          in_full,
     input  logic                          in_wr_en,
     input  logic signed [DATA_WIDTH-1:0]  in_din,
-    // External output FIFO read interface
     output logic                          out_empty,
     input  logic                          out_rd_en,
     output logic [3:0]                    out_dout,
-    // Exposed layer outputs for UVM coverage
     output logic signed [DATA_WIDTH-1:0]  layer0_out [NUM_L0_OUT],
     output logic signed [DATA_WIDTH-1:0]  layer1_out [NUM_L1_OUT],
     output logic [3:0]                    predicted_digit,
     output logic                          inference_done
 );
 
-    // Internal wires between input FIFO and neural_net core
     logic signed [DATA_WIDTH-1:0] fifo_in_dout;
     logic                         fifo_in_empty;
     logic                         fifo_in_rd_en;
-
-    // Internal wires between neural_net core and output FIFO
     logic [3:0]                   fifo_out_din;
     logic                         fifo_out_full;
     logic                         fifo_out_wr_en;
 
-    // -----------------------------------------------------------
-    // Input FIFO: 32-bit data, depth FIFO_DEPTH
-    // -----------------------------------------------------------
+
     fifo #(
         .FIFO_BUFFER_SIZE (FIFO_DEPTH),
         .FIFO_DATA_WIDTH  (DATA_WIDTH)
@@ -53,9 +45,6 @@ module neural_net_top #(
         .empty  (fifo_in_empty)
     );
 
-    // -----------------------------------------------------------
-    // Neural Network Processing Core
-    // -----------------------------------------------------------
     neural_net #(
         .DATA_WIDTH   (DATA_WIDTH),
         .NUM_INPUTS   (NUM_INPUTS),
@@ -79,9 +68,6 @@ module neural_net_top #(
         .inference_done  (inference_done)
     );
 
-    // -----------------------------------------------------------
-    // Output FIFO: 4-bit data (digit 0–9), depth FIFO_DEPTH
-    // -----------------------------------------------------------
     fifo #(
         .FIFO_BUFFER_SIZE (FIFO_DEPTH),
         .FIFO_DATA_WIDTH  (4)
